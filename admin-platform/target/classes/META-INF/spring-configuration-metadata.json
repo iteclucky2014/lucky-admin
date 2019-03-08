@@ -1,0 +1,48 @@
+{
+  "groups": [
+    {
+      "name": "gen",
+      "type": "cn.sambo.difference.platform.gentools.GenProperties",
+      "sourceType": "cn.sambo.difference.platform.gentools.GenProperties"
+    },
+    {
+      "name": "swagger",
+      "type": "cn.sambo.difference.platform.config.Swagger2ConfigurationProperties",
+      "sourceType": "cn.sambo.difference.platform.config.Swagger2ConfigurationProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "gen.bar",
+      "type": "java.lang.String",
+      "sourceType": "cn.sambo.difference.platform.gentools.GenProperties"
+    },
+    {
+      "name": "gen.controllers",
+      "type": "java.util.List<cn.sambo.difference.platform.gentools.GenProperties.CtrlConf>",
+      "sourceType": "cn.sambo.difference.platform.gentools.GenProperties"
+    },
+    {
+      "name": "gen.domains",
+      "type": "java.util.List<cn.sambo.difference.platform.gentools.GenProperties.DomainConf>",
+      "sourceType": "cn.sambo.difference.platform.gentools.GenProperties"
+    },
+    {
+      "name": "gen.gen-path",
+      "type": "java.lang.String",
+      "sourceType": "cn.sambo.difference.platform.gentools.GenProperties"
+    },
+    {
+      "name": "gen.repositorys",
+      "type": "java.util.List<cn.sambo.difference.platform.gentools.GenProperties.RepoConf>",
+      "sourceType": "cn.sambo.difference.platform.gentools.GenProperties"
+    },
+    {
+      "name": "swagger.enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "cn.sambo.difference.platform.config.Swagger2ConfigurationProperties",
+      "defaultValue": false
+    }
+  ],
+  "hints": []
+}

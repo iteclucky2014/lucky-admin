@@ -1,0 +1,36 @@
+gen:
+  bar: 123
+  genPath: C:/Users/Thinkpad/IdeaProjects/git/contract-approval/
+  domains:
+    - name: ContractApproval  # 首字母要大写
+      fields:
+        # 逻辑名|物理名|类型|主从关系|主表标记, 没值时可空但4个竖杠一个都不能少
+        - 流程实例ID|processInstanceId|String||
+        - 任务ID|taskId|String||
+        - 用户ID|userId|String||
+        - 审批结果|approvalResult|String||
+        - 审批意见|审批意见|String||
+        - 审批时间|approvalTime|String||
+    - name: Contract  # 首字母要大写
+      fields:
+        # 逻辑名|物理名|类型|主从关系|主表标记, 没值时可空但4个竖杠一个都不能少
+        - 流程实例ID|processInstanceId|String||
+        - 用户ID|userId|String||
+        - 存放路径|approvalPath|String||
+        - 流程状态|processStatus|String||
+
+  repositorys:
+    - name: ContractApprovalRepositoryDsl  # 首字母要大写
+      domain: ContractApproval  # 首字母要大写
+      pkType: Long
+    - name: ContractRepositoryDsl  # 首字母要大写
+      domain: Contract  # 首字母要大写
+      pkType: Long
+
+  controllers:
+    - name: ContractApprovalController  # 首字母要大写
+      domain: ContractApproval  # 首字母要大写
+      repository: ContractApprovalRepositoryDsl  # 首字母要大写
+    - name: ContractController  # 首字母要大写
+      domain: Contract  # 首字母要大写
+      repository: ContractRepositoryDsl  # 首字母要大写
