@@ -1,13 +1,11 @@
 package cn.sambo.difference.platform;
 
-import com.alibaba.fastjson.JSON;
-
 import cn.sambo.difference.platform.domain.PlatformUser;
 import cn.sambo.difference.platform.security.AccessToken;
 import cn.sambo.difference.platform.security.AccessTokenFilter;
 import cn.sambo.difference.platform.security.GrantedAuthorityFilter;
 import cn.sambo.difference.platform.security.XXXUserDetailsService;
-
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.boot.SpringApplication;
@@ -37,7 +35,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
