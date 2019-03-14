@@ -103,7 +103,7 @@ layui.use(['admin', 'form', 'user'], function(){
             key: setter.request.tokenName
             ,value: res.data.access_token
           });
-          $.getJSON('/platform/getSessonUserInfo', function(rep){
+          $.getJSON('/platform/getSessionUserInfo', function(rep){
             var userInfo = rep.data || {};
             layui.data(setter.tableName, {
               key: 'username'

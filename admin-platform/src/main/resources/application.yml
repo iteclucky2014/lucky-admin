@@ -12,17 +12,11 @@ multipart:
 logging:
   level.org.apache.coyote.http11.Http11InputBuffer: trace
   level.cn.sambo: debug
-  level.org.activiti.rest: debug
-  level.org.hibernate: trace
 
 spring:
   datasource:
-    #driver-class-name: com.mysql.jdbc.Driver
-    #url: jdbc:mysql://rm-m5eb94r32143ysme9so.mysql.rds.aliyuncs.com:3306/sambo_difference?characterEncoding=UTF-8
-    #username: root
-    #password: Nttdata123
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/mydb?characterEncoding=UTF-8&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/mydb?characterEncoding=UTF-8&serverTimezone=GMT%2B8
     username: root
     password: root
   data:
@@ -38,14 +32,14 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
 
   # activiti default configuration
-    activiti:
-      database-schema-update: true
-      check-process-definitions: false
+  #  activiti:
+  #    database-schema-update: true
+  #    check-process-definitions: false
   #    process-definition-location-prefix: classpath:/processes/
   #    process-definition-location-suffixes:
   #      - **.bpmn
   #      - **.bpmn20.xml
-      history-level: full
+  #    history-level: full
 
   resources:
     static-locations: classpath:META-INF/resources,classpath:resources/static
@@ -62,6 +56,6 @@ file:
       path: c:/temp
 
 pdf:
-  urlPrefix: http://localhost:8008/platform/device/
+  urlPrefix: http://localhost:8008/platform/reporter/
   store:
       path: c:/temp

@@ -1,11 +1,14 @@
 package com.lucky.admin.platform;
 
+import com.alibaba.fastjson.JSON;
+import com.lucky.admin.platform.common.ApiResult;
+import com.lucky.admin.platform.common.ApiResultBuilder;
+import com.lucky.admin.platform.common.ApiResultCode;
 import com.lucky.admin.platform.domain.PlatformUser;
 import com.lucky.admin.platform.security.AccessToken;
 import com.lucky.admin.platform.security.AccessTokenFilter;
 import com.lucky.admin.platform.security.GrantedAuthorityFilter;
 import com.lucky.admin.platform.security.XXXUserDetailsService;
-import com.alibaba.fastjson.JSON;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.boot.SpringApplication;
@@ -44,7 +47,7 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-@SpringBootApplication(scanBasePackages = {"cn.sambo"})
+@SpringBootApplication(scanBasePackages = {"com.lucky"})
 @EnableZuulProxy
 @EnableAutoConfiguration(exclude = {})
 @EnableConfigurationProperties
@@ -60,9 +63,9 @@ public class PlatformApplication {
 
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
-			http.authorizeRequests().antMatchers("platform/api/**", "platform/images/**").permitAll()
-					//.antMatchers( "//**", "/echarts/**", "/images/**", "/jstree/**", "/layui/**").permitAll()
-					//.anyRequest().access("@securityEx.check(authentication, request)")
+			http.authorizeRequests()
+                    .antMatchers("platform/api/**", "platform/images/**")
+                    .permitAll()
 					.and()
 					.addFilterAfter(new AccessTokenFilter(), FilterSecurityInterceptor.class)
 					.addFilterAfter(new GrantedAuthorityFilter(), AccessTokenFilter.class)
@@ -91,7 +94,7 @@ public class PlatformApplication {
 
 								out.write(JSON.toJSONString(result));
 							} else {
-								out.write("{\"code\":0,\"msg\":\"用户名或密码错误！\"}");
+								out.write("{\"code\":1001,\"msg\":\"用户名或密码错误！\"}");
 							}
 							out.flush();
 							out.close();
@@ -129,7 +132,12 @@ public class PlatformApplication {
 					.invalidateHttpSession(true)
 					.clearAuthentication(true)
 					.logoutSuccessUrl("/start/index.html#/user/login")
-					.and().csrf().disable().headers().frameOptions().disable();
+					.and()
+					.csrf()
+					.disable()
+					.headers()
+					.frameOptions()
+					.disable();
 		}
 
 		@Bean
@@ -153,25 +161,19 @@ public class PlatformApplication {
 		return "redirect:/start/index.html";
 	}
 
-	@GetMapping(value = "/getSessonUserInfo")
+	@GetMapping(value = "/getSessionUserInfo")
 	@ResponseBody
 	@Transactional
-	public Map<String, Object> getSessonUserInfo() {
-		Map<String, Object> result = new HashMap<>();
+	public ApiResult<PlatformUser> getSessionUserInfo() {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if(principal  != null && principal instanceof UserDetails) {
 			PlatformUser platformUser = (PlatformUser) principal;
-			result.put("code", 0);
-			result.put("msg", "");
-			result.put("data", platformUser);
+			return ApiResultBuilder.create().code(ApiResultCode.Success.code()).data(platformUser).build();
 		} else {
-			result.put("code", 1001);
-			result.put("msg", "没有信息");
+			return ApiResultBuilder.create().code(ApiResultCode.DataNotExist.code()).msg("数据不存在").build();
 		}
-		return result;
 	}
-
-
+    
 	@Bean
 	public static PropertySourcesPlaceholderConfigurer properties() {
 		PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
@@ -180,8 +182,4 @@ public class PlatformApplication {
 		configurer.setProperties(yaml.getObject());
 		return configurer;
 	}
-
-
-
 }
-
