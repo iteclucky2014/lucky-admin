@@ -7,6 +7,7 @@ import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
+import java.io.*;
 
 @Component
 public class FileSystemFileStorageManager implements FileStorageManager {

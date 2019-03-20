@@ -1,9 +1,11 @@
 package com.lucky.admin.platform.controller;
 
-import java.sql.Timestamp;
-import java.util.List;
-
-import com.lucky.admin.platform.domain.QPlatformDept;
+import com.lucky.admin.platform.common.*;
+import com.lucky.admin.platform.domain.*;
+import com.lucky.admin.platform.repository.PlatformDeptRepositoryDsl;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import io.swagger.annotations.Api;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,35 +14,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.itextpdf.kernel.font.PdfFont;
-import com.itextpdf.kernel.font.PdfFontFactory;
-import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.ListItem;
-import com.itextpdf.layout.element.Paragraph;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-
-import com.lucky.admin.platform.common.ApiPagination;
-import com.lucky.admin.platform.common.ApiResult;
-import com.lucky.admin.platform.common.ApiResultBuilder;
-import com.lucky.admin.platform.common.ApiResultCode;
-import com.lucky.admin.platform.common.FileStorageManager;
-import com.lucky.admin.platform.domain.PlatformDept;
-import com.lucky.admin.platform.domain.PlatformDevice;
-import com.lucky.admin.platform.domain.PlatformUser;
-import com.lucky.admin.platform.domain.QPlatformDevice;
-import com.lucky.admin.platform.domain.QPlatformRole;
-import com.lucky.admin.platform.domain.QPlatformUser;
-import com.lucky.admin.platform.repository.PlatformDeptRepositoryDsl;
-import io.swagger.annotations.Api;
+import java.sql.Timestamp;
+import java.util.List;
 
 @Api(value = "Device", tags = "平台部门信息管理")
 @RestController
@@ -209,19 +186,19 @@ public class PlatformDeviceController {
         
         for (PlatformUser d : data) {
         	try {
-    			PdfWriter writer = new PdfWriter(dirPath+"/"+d.getRealName()+".pdf");
-    			PdfDocument pdf = new PdfDocument(writer);
-    			Document document = new Document(pdf);
-    			PdfFont font = PdfFontFactory.createFont("STSongStd-Light", "UniGB-UCS2-H", true);// 解决显示中文字体
-    			document.add(new Paragraph(d.getRealName()).setFont(font));
-    			com.itextpdf.layout.element.List list = new com.itextpdf.layout.element.List().setSymbolIndent(12)
-    					.setListSymbol("\u2022").setFont(font);
-    			list.add(new ListItem("锄禾日当午"));
-    			list.add(new ListItem("汗滴禾下土"));
-    			list.add(new ListItem("谁知盘中餐"));
-    			list.add(new ListItem("粒粒皆辛苦"));
-    			document.add(list);
-    			document.close();
+//    			PdfWriter writer = new PdfWriter(dirPath+"/"+d.getRealName()+".pdf");
+//    			PdfDocument pdf = new PdfDocument(writer);
+//    			Document document = new Document(pdf);
+//    			PdfFont font = PdfFontFactory.createFont("STSongStd-Light", "UniGB-UCS2-H", true);// 解决显示中文字体
+//    			document.add(new Paragraph(d.getRealName()).setFont(font));
+//    			com.itextpdf.layout.element.List list = new com.itextpdf.layout.element.List().setSymbolIndent(12)
+//    					.setListSymbol("\u2022").setFont(font);
+//    			list.add(new ListItem("锄禾日当午"));
+//    			list.add(new ListItem("汗滴禾下土"));
+//    			list.add(new ListItem("谁知盘中餐"));
+//    			list.add(new ListItem("粒粒皆辛苦"));
+//    			document.add(list);
+//    			document.close();
     			d.setUrl(urlPrefix+"?fileName%3D"+d.getRealName()+".pdf");
     		} catch (Exception e) {
     			e.printStackTrace();
