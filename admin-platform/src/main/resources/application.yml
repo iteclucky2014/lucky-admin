@@ -1,5 +1,5 @@
 server:
-  port: 8008
+  port: 8090
   servlet:
     context-path: /platform
     session:
@@ -51,11 +51,11 @@ spring:
       force: true
 
 file:
-  urlPrefix: http://localhost:8008/platform/files/
+  urlPrefix: http://localhost:8090/platform/files/
   store:
       path: c:/temp
 
 pdf:
-  urlPrefix: http://localhost:8008/platform/reporter/
+  urlPrefix: http://localhost:8090/platform/reporter/
   store:
       path: c:/temp

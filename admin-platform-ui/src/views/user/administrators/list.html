@@ -4,12 +4,9 @@
   
 <div class="layui-card layadmin-header">
   <div class="layui-breadcrumb" lay-filter="breadcrumb">
-  	<a href="javascript:;" layadmin-event="flexible" title="侧边伸缩">
-      <i class="layui-icon layui-icon-shrink-right" id="LAY_app_flexible"></i>
-    </a>
     <a lay-href="">主页</a>
-    <a><cite>系统设置</cite></a>
-    <a><cite>用户管理</cite></a>
+    <a><cite>用户</cite></a>
+    <a><cite>后台管理员</cite></a>
   </div>
 </div>
 
@@ -20,26 +17,32 @@
         <div class="layui-inline">
           <label class="layui-form-label">登录名</label>
           <div class="layui-input-block">
-            <input type="text" name="username" placeholder="请输入" autocomplete="off" class="layui-input">
+            <input type="text" name="loginname" placeholder="请输入" autocomplete="off" class="layui-input">
           </div>
         </div>
         <div class="layui-inline">
-            <label class="layui-form-label">姓名</label>
-            <div class="layui-input-block">
-              <input type="text" name="realName" placeholder="请输入" autocomplete="off" class="layui-input">
-            </div>
-          </div>
-        <div class="layui-inline">
           <label class="layui-form-label">手机</label>
           <div class="layui-input-block">
-            <input type="text" name="tel" placeholder="请输入" autocomplete="off" class="layui-input">
+            <input type="text" name="telphone" placeholder="请输入" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+        <div class="layui-inline">
+          <label class="layui-form-label">邮箱</label>
+          <div class="layui-input-block">
+            <input type="text" name="email" placeholder="请输入" autocomplete="off" class="layui-input">
           </div>
         </div>
         <div class="layui-inline">
           <label class="layui-form-label">角色</label>
           <div class="layui-input-block">
-            <select name="roleId">
-              <option value="">全部角色</option>
+            <select name="role">
+              <option value="0">管理员</option>
+              <option value="1">超级管理员</option>
+              <option value="2">纠错员</option>
+              <option value="3">采购员</option>
+              <option value="4">推销员</option>
+              <option value="5">运营人员</option>
+              <option value="6">编辑</option>
             </select>
           </div>
         </div>
@@ -67,7 +70,7 @@
       </script>
       <script type="text/html" id="table-useradmin-admin">
         <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
-        {{#  if(d.roleName == '超级管理员'){ }}
+        {{#  if(d.role == '超级管理员'){ }}
           <a class="layui-btn layui-btn-disabled layui-btn-xs"><i class="layui-icon layui-icon-delete"></i>删除</a>
         {{#  } else { }}
           <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
@@ -84,18 +87,8 @@ layui.use('useradmin', layui.factory('useradmin')).use(['admin', 'useradmin', 't
   ,view = layui.view
   ,table = layui.table
   ,form = layui.form;
-
-    var localData = layui.data(layui.setter.tableName);
-
+  
   form.render(null, 'layadmin-useradmin-formlist');
-
-  $.getJSON('/platform/role/page?page=1&limit=100&access_token='+localData["access_token"], function(rep){
-    var data = rep.data || [];
-    data.forEach(function(item) {
-        $("select[name='roleId']").append('<option value="'+ item.id +'">'+ item.roleName +'</option>');
-        form.render('select');
-    });
-  });
   
   //监听搜索
   form.on('submit(LAY-user-back-search)', function(data){
@@ -116,96 +109,47 @@ layui.use('useradmin', layui.factory('useradmin')).use(['admin', 'useradmin', 't
       if(checkData.length === 0){
         return layer.msg('请选择数据');
       }
-      layer.confirm('确定删除此用户吗？', function(index) {
-        var ids = [];
-        checkData.forEach(function(item){
-          ids.push(item.id);
+      
+      layer.prompt({
+        formType: 1
+        ,title: '敏感操作，请验证口令'
+      }, function(value, index){
+        layer.close(index);
+        
+        layer.confirm('确定删除吗？', function(index) {
+          
+          //执行 Ajax 后重载
+          /*
+          admin.req({
+            url: 'xxx'
+            //,……
+          });
+          */
+          table.reload('LAY-user-back-manage');
+          layer.msg('已删除');
         });
-
-        var loading = layer.msg('处理中', { icon: 16 ,shade: 0.01 ,time: 0});
-        $.ajax({
-          url: '/platform/user/delete?access_token='+localData["access_token"]
-          ,type: 'POST'
-          ,contentType: 'application/json; charset=utf-8'
-          ,data: JSON.stringify({
-            userid: '10001',
-            username: 'admin',
-            data: ids
-          })
-          ,dataType: 'json'
-          ,success: function(resp){
-            if (resp.code === 0) {
-              layer.close(loading); //执行关闭 
-              layer.close(index); //执行关闭 
-              table.reload('LAY-user-back-manage');
-              layer.msg('已删除');
-            } else {
-              layer.msg(resp.msg, {icon: 6}); 
-            }
-          }
-          ,error: function(resp) {
-            layer.msg(resp.msg, {icon: 6}); 
-          }
-        });
-      });
+      }); 
     }
     ,add: function(){
+      admin.popup({
+        title: '添加管理员'
+        ,area: ['420px', '450px']
+        ,id: 'LAY-popup-useradmin-add'
+        ,success: function(layero, index){
+          view(this.id).render('user/administrators/adminform').done(function(){
+            form.render(null, 'layuiadmin-form-admin');
+            
+            //监听提交
+            form.on('submit(LAY-user-back-submit)', function(data){
+              var field = data.field; //获取提交的字段
 
-      $.getJSON('/platform/role/page?page=1&limit=100&access_token='+localData["access_token"], function(rep){
-        admin.popup({
-          title: '添加管理员'
-          ,area: ['500px', '600px']
-          ,id: 'LAY-popup-useradmin-add'
-          ,success: function(layero, index){
-            view(this.id).render('user/administrators/adminform').done(function(){
-              form.render(null, 'layuiadmin-form-admin');
-
-              // 动态生成角色复选框
-              var roles = rep.data || [];
-              roles.forEach(function(item) {
-                  $("#LAY-popup-user-add-roles-checkbox").append('<input type="checkbox" name="platformRoles['+ item.id +']" title="'+ item.roleName +'" value="'+ item.id +'" lay-skin="primary">');
-              });
-              form.render('checkbox');
-              
-              //监听提交
-              form.on('submit(LAY-user-back-submit)', function(data){
-                var field = data.field; //获取提交的字段
-                // 整理复选框数据
-                var platformRoles = [];
-                for (var key in field) {
-                  if (key.indexOf('platformRoles[') != -1) {
-                    platformRoles.push(field[key]);
-                  }
-                }
-                field['platformRoles'] = platformRoles;
-                var loading = layer.msg('处理中', { icon: 16 ,shade: 0.01, time: 0 });
-                $.ajax({
-                  url: '/platform/user/save?access_token='+localData["access_token"]
-                  ,type: 'POST'
-                  ,contentType: 'application/json; charset=utf-8'
-                  ,data: JSON.stringify({
-                    userid: '10001',
-                    username: 'admin',
-                    data: field
-                  })
-                  ,dataType: 'json'
-                  ,success: function(resp){
-                    if (resp.code === 0) {
-                      layer.close(loading); //执行关闭 
-                      layui.table.reload('LAY-user-back-manage'); //重载表格
-                      layer.close(index); //执行关闭 
-                    } else {
-                      layer.msg(resp.msg, {icon: 6}); 
-                    }
-                  }
-                  ,error: function(resp) {
-                    layer.msg(resp.msg, {icon: 6}); 
-                  }
-                });
-              });
+              //提交 Ajax 成功后，关闭当前弹层并重载表格
+              //$.ajax({});
+              layui.table.reload('LAY-user-back-manage'); //重载表格
+              layer.close(index); //执行关闭 
             });
-          }
-        });
+          });
+        }
       });
     }
   }  

@@ -4,6 +4,7 @@
  @Author：贤心
  @Site：http://www.layui.com/admin/
  @License：LPPL（layui付费产品协议）
+ @加QQ：1293166442 获取源码版
     
  */
  
@@ -16,13 +17,13 @@ layui.define(['laytpl', 'layer', 'element', 'util'], function(exports){
     ,engine: '.html' //视图文件后缀名
     ,pageTabs: false //是否开启页面选项卡功能。单页版不推荐开启
     
-    ,name: '网格化产销差管理系统'
+    ,name: 'layuiAdmin Pro'
     ,tableName: 'layuiAdmin' //本地存储表名
     ,MOD_NAME: 'admin' //模块事件名
     
     ,debug: true //是否开启调试模式。如开启，接口异常时会抛出异常 URL 等信息
     
-    ,interceptor: true //是否开启未登入拦截
+    ,interceptor: false //是否开启未登入拦截
     
     //自定义请求字段
     ,request: {
@@ -51,15 +52,13 @@ layui.define(['laytpl', 'layer', 'element', 'util'], function(exports){
     //扩展的第三方模块
     ,extend: [
       'echarts', //echarts 核心包
-      'echartsTheme', //echarts 主题
-      'treeSelect', // 选择树
-      'treetable' // 表格树
+      'echartsTheme' //echarts 主题
     ]
     
     //主题配置
     ,theme: {
       //内置主题配色方案
-      color: [/*{
+      color: [{
         main: '#20222A' //主题色
         ,selected: '#009688' //选中色
         ,alias: 'default' //默认别名
@@ -100,7 +99,7 @@ layui.define(['laytpl', 'layer', 'element', 'util'], function(exports){
         ,logo: '#3A3D49'
         ,selected: '#009688'
         ,alias: 'classic-black' //经典黑
-      },*/{
+      },{
         logo: '#226A62'
         ,header: '#2F9688'
         ,alias: 'green-header' //墨绿头

@@ -1,189 +1,66 @@
-/**
-
- @Name：layuiAdmin 设置
- @Author：贤心
- @Site：http://www.layui.com/admin/
- @License: LPPL
-    
- */
- 
-layui.define(['form', 'upload'], function(exports){
-  var $ = layui.$
-  ,layer = layui.layer
-  ,laytpl = layui.laytpl
-  ,setter = layui.setter
-  ,view = layui.view
-  ,admin = layui.admin
-  ,form = layui.form
-  ,upload = layui.upload;
-
-  var $body = $('body');
-  
-  form.render();
-  
-  //自定义验证
-  form.verify({
-    nickname: function(value, item){ //value：表单的值、item：表单的DOM对象
-      if(!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)){
-        return '用户名不能有特殊字符';
-      }
-      if(/(^\_)|(\__)|(\_+$)/.test(value)){
-        return '用户名首尾不能出现下划线\'_\'';
-      }
-      if(/^\d+\d+\d$/.test(value)){
-        return '用户名不能全为数字';
-      }
-    }
-    
-    //我们既支持上述函数式的方式，也支持下述数组的形式
-    //数组的两个值分别代表：[正则匹配、匹配不符时的提示文字]
-    ,pass: [
-      /^[\S]{6,12}$/
-      ,'密码必须6到12位，且不能出现空格'
-    ]
-    
-    //确认密码
-    ,repass: function(value){
-      if(value !== $('#LAY_password').val()){
-        return '两次密码输入不一致';
-      }
-    }
-  });
-  
-  //网站设置
-  form.on('submit(set_website)', function(obj){
-    layer.msg(JSON.stringify(obj.field));
-    
-    //提交修改
-    /*
-    admin.req({
-      url: ''
-      ,data: obj.field
-      ,success: function(){
-        
-      }
+/** layuiAdmin.pro-v1.2.1 LPPL License By http://www.layui.com/admin/ 加QQ：1293166442 获取源码版*/
+;
+layui.define(["form", "upload"],
+function(t) {
+    var i = layui.$,
+    e = layui.layer,
+    n = (layui.laytpl, layui.setter, layui.view, layui.admin),
+    a = layui.form,
+    s = layui.upload;
+    i("body");
+    a.render(),
+    a.verify({
+        nickname: function(t, i) {
+            return new RegExp("^[a-zA-Z0-9_一-龥\\s·]+$").test(t) ? /(^\_)|(\__)|(\_+$)/.test(t) ? "用户名首尾不能出现下划线'_'": /^\d+\d+\d$/.test(t) ? "用户名不能全为数字": void 0 : "用户名不能有特殊字符"
+        },
+        pass: [/^[\S]{6,12}$/, "密码必须6到12位，且不能出现空格"],
+        repass: function(t) {
+            if (t !== i("#LAY_password").val()) return "两次密码输入不一致"
+        }
+    }),
+    a.on("submit(set_website)",
+    function(t) {
+        return e.msg(JSON.stringify(t.field)),
+        !1
+    }),
+    a.on("submit(set_system_email)",
+    function(t) {
+        return e.msg(JSON.stringify(t.field)),
+        !1
+    }),
+    a.on("submit(setmyinfo)",
+    function(t) {
+        return e.msg(JSON.stringify(t.field)),
+        !1
     });
-    */
-    return false;
-  });
-  
-  //邮件服务
-  form.on('submit(set_system_email)', function(obj){
-    layer.msg(JSON.stringify(obj.field));
-    
-    //提交修改
-    /*
-    admin.req({
-      url: ''
-      ,data: obj.field
-      ,success: function(){
-        
-      }
-    });
-    */
-    return false;
-  });
-
-
-
-    //设置我的资料
-    form.on('submit(setmyinfo)', function(obj){
-        var field = obj.field;
-        //提交修改
-        var loading = layer.msg('处理中', { icon: 16 ,shade: 0.01 ,time: 0});
-        var localData = layui.data(setter.tableName);
-        var username = localData.username;
-        field['username'] = username;
-
-        //提交修改
-        $.ajax({
-            url: '/platform/user/setmyinfo' + '?access_token=' + localData["access_token"]
-            ,type: 'POST'
-            ,contentType: 'application/json; charset=utf-8'
-            ,data: JSON.stringify({
-                username: username,
-                data: field
+    var r = i("#LAY_avatarSrc");
+    s.render({
+        url: "/api/upload/",
+        elem: "#LAY_avatarUpload",
+        done: function(t) {
+            0 == t.status ? r.val(t.url) : e.msg(t.msg, {
+                icon: 5
             })
-            ,dataType: 'json'
-            ,success: function(resp){
-                if (resp.code === 0) {
-                    layer.close(loading); //执行关闭
-                    layer.msg(resp.msg, {icon: 6});
-                } else {
-                    layer.msg(resp.msg, {icon: 6});
-                }
-            }
-            ,error: function(resp) {
-                layer.msg('系统错误，请联系管理员。', {icon: 6});
-            }
-        });
-        return false;
-    });
-
-  //上传头像
-  var avatarSrc = $('#LAY_avatarSrc');
-  upload.render({
-    url: '/api/upload/'
-    ,elem: '#LAY_avatarUpload'
-    ,done: function(res){
-      if(res.status == 0){
-        avatarSrc.val(res.url);
-      } else {
-        layer.msg(res.msg, {icon: 5});
-      }
-    }
-  });
-  
-  //查看头像
-  admin.events.avartatPreview = function(othis){
-    var src = avatarSrc.val();
-    layer.photos({
-      photos: {
-        "title": "查看头像" //相册标题
-        ,"data": [{
-          "src": src //原图地址
-        }]
-      }
-      ,shade: 0.01
-      ,closeBtn: 1
-      ,anim: 5
-    });
-  };
-
-
-    //设置密码
-    form.on('submit(setmypass)', function(obj){
-        var field = obj.field;
-        //提交修改
-        var loading = layer.msg('处理中', { icon: 16 ,shade: 0.01 ,time: 0});
-        var localData = layui.data(setter.tableName);
-        var username = localData.username;
-        field['username'] = username;
-
-        $.ajax({
-            url: '/platform/user/changepw' + '?access_token=' + localData["access_token"]
-            ,type: 'POST'
-            ,contentType: 'application/json; charset=utf-8'
-            ,data: JSON.stringify({
-                username: username,
-                data: field
-            })
-            ,dataType: 'json'
-            ,success: function(resp){
-                if (resp.code === 0) {
-                    layer.close(loading); //执行关闭
-                    layer.msg(resp.msg, {icon: 6});
-                } else {
-                    layer.msg(resp.msg, {icon: 6});
-                }
-            }
-            ,error: function(resp) {
-                layer.msg('系统错误，请联系管理员。', {icon: 6});
-            }
-        });
-        return false;
-    });
-  
-  //对外暴露的接口
-  exports('set', {});
+        }
+    }),
+    n.events.avartatPreview = function(t) {
+        var i = r.val();
+        e.photos({
+            photos: {
+                title: "查看头像",
+                data: [{
+                    src: i
+                }]
+            },
+            shade: .01,
+            closeBtn: 1,
+            anim: 5
+        })
+    },
+    a.on("submit(setmypass)",
+    function(t) {
+        return e.msg(JSON.stringify(t.field)),
+        !1
+    }),
+    t("set", {})
 });
