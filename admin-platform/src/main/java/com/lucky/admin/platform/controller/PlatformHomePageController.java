@@ -1,29 +1,26 @@
 package com.lucky.admin.platform.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.lucky.admin.platform.common.ApiResult;
+import com.lucky.admin.platform.common.ApiResultBuilder;
+import com.lucky.admin.platform.common.ApiResultCode;
+import com.lucky.admin.platform.domain.PlatformCheckPoint;
+import com.lucky.admin.platform.domain.PlatformDept;
+import com.lucky.admin.platform.domain.QPlatformCheckPoint;
 import com.lucky.admin.platform.domain.QPlatformDept;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-
-import com.lucky.admin.platform.common.ApiResult;
-import com.lucky.admin.platform.common.ApiResultBuilder;
-import com.lucky.admin.platform.common.ApiResultCode;
-import com.lucky.admin.platform.common.ShapefileFormatUtil;
-import com.lucky.admin.platform.domain.PlatformCheckPoint;
-import com.lucky.admin.platform.domain.PlatformDept;
-import com.lucky.admin.platform.domain.QPlatformCheckPoint;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Api(value = "homePage", tags = "主页")
 @RestController
@@ -93,7 +90,7 @@ public class PlatformHomePageController {
 		 //读取收文件转正json
         String shpPath = System.getProperty("user.dir") + "\\shapefile\\津南区.shp";
         System.out.println(shpPath);
-        String json = ShapefileFormatUtil.shp2Json(shpPath);        
+        String json = "";        
 		return json;
 	}
 
