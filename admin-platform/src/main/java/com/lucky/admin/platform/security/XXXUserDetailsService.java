@@ -1,10 +1,8 @@
 package com.lucky.admin.platform.security;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
-
 import com.lucky.admin.platform.domain.PlatformUser;
 import com.lucky.admin.platform.domain.QPlatformUser;
-
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,10 +20,8 @@ public class XXXUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         QPlatformUser qPlatformUser = QPlatformUser.platformUser;
-        PlatformUser platformUser = queryFactory.selectFrom(qPlatformUser)
-                .where(qPlatformUser.username.eq(username)).fetchFirst();
+        PlatformUser platformUser = queryFactory.selectFrom(qPlatformUser).where(qPlatformUser.username.eq(username)).fetchFirst();
 
         return platformUser;
     }
-
 }

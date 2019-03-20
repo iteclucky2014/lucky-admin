@@ -1,6 +1,7 @@
 package com.lucky.admin.platform.common;
 
 public class ApiParams<T> {
+
     /** 用户ID */
     private String userid;
     /** 用户名 */

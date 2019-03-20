@@ -1,11 +1,9 @@
 package com.lucky.admin.platform.security;
 
 import com.alibaba.fastjson.JSON;
-
 import com.lucky.admin.platform.domain.PlatformPermission;
 import com.lucky.admin.platform.domain.PlatformRole;
 import com.lucky.admin.platform.domain.PlatformUser;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,7 +103,5 @@ public class GrantedAuthorityFilter extends GenericFilterBean {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
-
-
     }
 }

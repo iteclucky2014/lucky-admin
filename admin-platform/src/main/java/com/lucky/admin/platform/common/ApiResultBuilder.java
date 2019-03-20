@@ -2,6 +2,7 @@ package com.lucky.admin.platform.common;
 
 @SuppressWarnings("unchecked")
 public class ApiResultBuilder {
+
     private ApiResult target;
 
     private ApiResultBuilder() {
@@ -22,13 +23,13 @@ public class ApiResultBuilder {
         return this;
     }
 
-    public ApiResultBuilder pagination(ApiPagination pagination) {
-        target.setPagination(pagination);
+    public ApiResultBuilder data(Object data) {
+        target.setData(data);
         return this;
     }
 
-    public ApiResultBuilder data(Object data) {
-        target.setData(data);
+    public ApiResultBuilder pagination(ApiPagination pagination) {
+        target.setPagination(pagination);
         return this;
     }
 

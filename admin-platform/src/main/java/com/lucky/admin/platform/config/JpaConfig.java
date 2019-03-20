@@ -10,6 +10,7 @@ import javax.persistence.PersistenceContext;
 
 @Configuration
 public class JpaConfig {
+
     @Bean
     @Autowired
     @PersistenceContext

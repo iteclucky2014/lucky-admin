@@ -39,11 +39,6 @@ public class ApiResult<T> {
         this.pagination = new ApiPagination(page, limit, count);
     }
 
-    /** 总件数 */
-    public Long getCount() {
-        return this.pagination == null ? 0 : this.pagination.getCount();
-    }
-
     /** 当前页码 */
     public Long getPage() {
         return this.pagination == null ? 0 : this.pagination.getPage();
@@ -54,22 +49,9 @@ public class ApiResult<T> {
         return this.pagination == null ? 0 : this.pagination.getLimit();
     }
 
-    /**
-     * 获取 数据列表
-     *
-     * @return data 数据列表
-     */
-    public T getData() {
-        return this.data;
-    }
-
-    /**
-     * 设置 数据列表
-     *
-     * @param data 数据列表
-     */
-    public void setData(T data) {
-        this.data = data;
+    /** 总件数 */
+    public Long getCount() {
+        return this.pagination == null ? 0 : this.pagination.getCount();
     }
 
     /**
@@ -106,6 +88,24 @@ public class ApiResult<T> {
      */
     public void setMsg(String msg) {
         this.msg = msg;
+    }
+
+    /**
+     * 获取 数据列表
+     *
+     * @return data 数据列表
+     */
+    public T getData() {
+        return this.data;
+    }
+
+    /**
+     * 设置 数据列表
+     *
+     * @param data 数据列表
+     */
+    public void setData(T data) {
+        this.data = data;
     }
 
     /**

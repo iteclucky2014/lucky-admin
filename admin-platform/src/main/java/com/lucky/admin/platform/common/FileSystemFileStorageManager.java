@@ -7,8 +7,6 @@ import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
-import java.io.*;
-
 
 @Component
 public class FileSystemFileStorageManager implements FileStorageManager {
@@ -36,6 +34,7 @@ public class FileSystemFileStorageManager implements FileStorageManager {
 
 	@Override
 	public String save(String fileName, byte[] fileData) throws Exception {
+
 		String picPath = FilenameUtils.concat(fileStorePath, fileName);
 		OutputStream os = new FileOutputStream(picPath);
 		StreamUtils.copy(fileData, os);
@@ -45,6 +44,7 @@ public class FileSystemFileStorageManager implements FileStorageManager {
 
 	@Override
 	public String save(String fileName, MultipartFile file) throws Exception {
+
 		String picPath = FilenameUtils.concat(fileStorePath, fileName);
 		file.transferTo(new File(picPath));
 		return fileName;

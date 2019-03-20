@@ -1,14 +1,14 @@
 package com.lucky.admin.platform.common;
 
 public enum ApiResultCode {
+
     Success(0, "成功"),
     Fail(99, "失败"),
     DataIllegality(91, "请求数据不合法"),
     DataConflict(92, "数据冲突"),
     DataNotExist(93, "数据不存在"),
-    DataError(94, "数据错误"),
-    
-    ;
+    DataError(94, "数据错误");
+
     /** 业务代码 */
     private int code;
     /** 消息文本 */
@@ -19,7 +19,6 @@ public enum ApiResultCode {
         this.msg = msg;
     }
 
-
     /**
      * 获取 业务代码
      *
@@ -29,7 +28,6 @@ public enum ApiResultCode {
         return this.code;
     }
 
-
     /**
      * 获取 消息文本
      *
@@ -38,5 +36,4 @@ public enum ApiResultCode {
     public String msg() {
         return this.msg;
     }
-
 }

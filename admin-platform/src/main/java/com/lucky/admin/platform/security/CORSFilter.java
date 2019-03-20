@@ -15,17 +15,16 @@ public class CORSFilter implements Filter {
 
     @Override
     public void destroy() {
-
     }
 
     @Override
-    public void doFilter(ServletRequest req, ServletResponse resp,
-                         FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
+
         HttpServletResponse response = (HttpServletResponse) resp;
         HttpServletRequest request = (HttpServletRequest) req;
 
-        //response.setHeader("Access-Control-Allow-Credentials", "true");
-        //response.setHeader("Access-Control-Allow-Origin", "http://localhost:8000");
+//        response.setHeader("Access-Control-Allow-Credentials", "true");
+//        response.setHeader("Access-Control-Allow-Origin", "http://localhost:8000");
 
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
@@ -37,11 +36,9 @@ public class CORSFilter implements Filter {
         } else {
             chain.doFilter(req, resp);
         }
-
     }
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
     }
 }

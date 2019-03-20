@@ -3,6 +3,7 @@ package com.lucky.admin.platform.security;
 import java.util.Date;
 
 public class AccessToken {
+
     private String access_token;
     private Date expired;
 

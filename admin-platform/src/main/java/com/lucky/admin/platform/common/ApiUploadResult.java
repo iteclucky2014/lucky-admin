@@ -1,6 +1,7 @@
 package com.lucky.admin.platform.common;
 
 public class ApiUploadResult<T> {
+
     /** 代码 */
     private String code;
     /** 消息 */

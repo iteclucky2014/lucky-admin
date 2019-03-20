@@ -12,9 +12,12 @@ import java.sql.SQLException;
 
 @RestControllerAdvice
 public class RestControllerExceptionHandleAdvice {
+
     private final static Logger logger = LoggerFactory.getLogger(RestControllerExceptionHandleAdvice.class);
+
     @ExceptionHandler
     public ApiResult handler(HttpServletRequest req, HttpServletResponse res, Exception e) {
+
         logger.info("Restful Http请求发生异常...");
 
         if (res.getStatus() == HttpStatus.BAD_REQUEST.value()) {
