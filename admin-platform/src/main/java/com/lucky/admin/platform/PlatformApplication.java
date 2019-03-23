@@ -10,6 +10,7 @@ import com.lucky.admin.platform.security.AccessTokenFilter;
 import com.lucky.admin.platform.security.GrantedAuthorityFilter;
 import com.lucky.admin.platform.security.XXXUserDetailsService;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -47,6 +48,7 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+@MapperScan("com.lucky.admin.platform.dao")
 @SpringBootApplication(scanBasePackages = {"com.lucky"})
 @EnableZuulProxy
 @EnableAutoConfiguration(exclude = {})

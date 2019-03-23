@@ -50,6 +50,10 @@ spring:
       enabled: true
       force: true
 
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml
+  type-aliases-package: com.lucky.admin.platform.vo
+
 file:
   urlPrefix: http://localhost:8090/platform/files/
   store:
