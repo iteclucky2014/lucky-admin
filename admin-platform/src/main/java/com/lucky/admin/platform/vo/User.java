@@ -1,80 +1,57 @@
 package com.lucky.admin.platform.vo;
 
-import java.util.Date;
+import com.lucky.admin.platform.common.BaseEntity;
 
-public class User {
-//	private List<UserRole> userRoles;
-//
-//	public List<UserRole> getUserRoles() {
-//		return userRoles;
-//	}
-//
-//	public void setUserRoles(List<UserRole> userRoles) {
-//		this.userRoles = userRoles;
-//	}
+/**
+ * Created by Lucky on 2019/3/24.
+ */
+public class User extends BaseEntity {
 
-	private String id;
+	private String username;
 
-	private String name;
+	private String nickname;
 
-	private String pwd;
+	private String password;
 	
-	private String tel;
+	private String mobile;
 	
 	private String email;
 	
-	private String roleId;
-
-	private Date createTime;
-
-	private Date updateTime;
-
-	public String getId() {
-		return id;
+	private int roleId;
+	
+	public User() {
 	}
 
-	public void setId(String id) {
-		this.id = id == null ? null : id.trim();
+	public String getUsername() {
+		return username;
 	}
 
-	public String getName() {
-		return name;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
-	public void setName(String name) {
-		this.name = name == null ? null : name.trim();
+	public String getNickname() {
+		return nickname;
 	}
 
-	public String getPwd() {
-		return pwd;
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 
-	public void setPwd(String pwd) {
-		this.pwd = pwd == null ? null : pwd.trim();
+	public String getPassword() {
+		return password;
 	}
 
-	public Date getCreateTime() {
-		return createTime;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
+	public String getMobile() {
+		return mobile;
 	}
 
-	public Date getUpdateTime() {
-		return updateTime;
-	}
-
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
-
-	public String getTel() {
-		return tel;
-	}
-
-	public void setTel(String tel) {
-		this.tel = tel;
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
 	}
 
 	public String getEmail() {
@@ -85,11 +62,11 @@ public class User {
 		this.email = email;
 	}
 
-	public String getRoleId() {
+	public int getRoleId() {
 		return roleId;
 	}
 
-	public void setRoleId(String roleId) {
+	public void setRoleId(int roleId) {
 		this.roleId = roleId;
 	}
 }
