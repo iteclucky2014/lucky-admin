@@ -1,11 +1,17 @@
 package com.lucky.admin.platform.vo;
 
 import com.lucky.admin.platform.common.BaseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by Lucky on 2019/3/24.
  */
-public class User extends BaseEntity {
+public class User extends BaseEntity implements UserDetails {
 
 	private String username;
 
@@ -18,8 +24,21 @@ public class User extends BaseEntity {
 	private String email;
 	
 	private int roleId;
+
+	private Set<Role> authorities = new HashSet<>();
 	
 	public User() {
+	}
+
+	public User(String username, String password) {
+		this.username = username;
+		this.password = password;
+	}
+
+	public User(String username, String password, Set<Role> authorities) {
+		this.username = username;
+		this.password = password;
+		this.authorities = authorities;
 	}
 
 	public String getUsername() {
@@ -68,5 +87,35 @@ public class User extends BaseEntity {
 
 	public void setRoleId(int roleId) {
 		this.roleId = roleId;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return authorities;
+	}
+
+	public void setAuthorities(Set<Role> authorities) {
+		this.authorities.clear();
+		this.authorities.addAll(authorities);
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
 	}
 }

@@ -1,9 +1,9 @@
 package com.lucky.admin.platform.security;
 
 import com.alibaba.fastjson.JSON;
-import com.lucky.admin.platform.domain.PlatformPermission;
-import com.lucky.admin.platform.domain.PlatformRole;
-import com.lucky.admin.platform.domain.PlatformUser;
+import com.lucky.admin.platform.vo.Menu;
+import com.lucky.admin.platform.vo.Role;
+import com.lucky.admin.platform.vo.User;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,23 +58,23 @@ public class GrantedAuthorityFilter extends GenericFilterBean {
         if (mached) {
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             if(principal != null && principal instanceof UserDetails) {
-                PlatformUser platformUser = (PlatformUser) principal;
+                User user = (User) principal;
 
-                logger.debug("-----------> User: {}", platformUser.getUsername());
+                logger.debug("-----------> User: {}", user.getUsername());
 
-                if ("admin".equals(platformUser.getUsername())) {
+                if ("admin".equals(user.getUsername())) {
                     logger.debug("-----------> admin拥有一切权限");
                     filterChain.doFilter(servletRequest, servletResponse);
                     return;
                 }
                 int count = 0;
-                for (GrantedAuthority authority : platformUser.getAuthorities()) {
-                    PlatformRole platformRole = (PlatformRole) authority;
-                    logger.debug("-----------> Role: {}({})", platformRole.getRoleName(), platformRole.getRole());
-                    for (PlatformPermission permission : platformRole.getPlatformPermissions()) {
-                        logger.debug("-----------> Permission: {}({})", permission.getName(), permission.getUrl());
+                for (GrantedAuthority authority : user.getAuthorities()) {
+                    Role role = (Role) authority;
+                    logger.debug("-----------> Role: {}({})", role.getRoleName(), role.getRoleDesc());
+                    for (Menu permission : role.getPermissions()) {
+                        logger.debug("-----------> Permission: {}({})", permission.getMenuName(), permission.getAddress());
 
-                        String[] urls = StringUtils.split(permission.getUrl(), ',');
+                        String[] urls = StringUtils.split(permission.getAddress(), ',');
 
                         for (String url : urls) {
                             if (antPathMatcher.match(url, requestURI)) {

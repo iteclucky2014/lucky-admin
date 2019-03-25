@@ -9,7 +9,7 @@ public class Menu extends BaseEntity {
 
     private int order;
     
-    private String name;
+    private String menuName;
     
     private String address;
     
@@ -26,12 +26,12 @@ public class Menu extends BaseEntity {
         this.order = order;
     }
 
-    public String getName() {
-        return name;
+    public String getMenuName() {
+        return menuName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setMenuName(String menuName) {
+        this.menuName = menuName;
     }
 
     public String getAddress() {

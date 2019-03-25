@@ -4,11 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.lucky.admin.platform.common.ApiResult;
 import com.lucky.admin.platform.common.ApiResultBuilder;
 import com.lucky.admin.platform.common.ApiResultCode;
-import com.lucky.admin.platform.domain.PlatformUser;
 import com.lucky.admin.platform.security.AccessToken;
 import com.lucky.admin.platform.security.AccessTokenFilter;
 import com.lucky.admin.platform.security.GrantedAuthorityFilter;
-import com.lucky.admin.platform.security.XXXUserDetailsService;
+import com.lucky.admin.platform.vo.User;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
@@ -21,7 +20,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
@@ -86,8 +84,8 @@ public class PlatformApplication {
 							Map<String, Object> result = new HashMap<>();
 							Object principal  = authentication.getPrincipal();
 							if(principal  != null && principal  instanceof UserDetails) {
-								PlatformUser platformUser = (PlatformUser) principal;
-								AccessToken accessToken = new AccessToken(DigestUtils.sha256Hex(platformUser.getUsername() + System.currentTimeMillis()), null);
+								User user = (User) principal;
+								AccessToken accessToken = new AccessToken(DigestUtils.sha256Hex(user.getUsername() + System.currentTimeMillis()), null);
 								result.put("code", 0);
 								result.put("msg", "登入成功");
 								result.put("data", accessToken);
@@ -142,15 +140,15 @@ public class PlatformApplication {
 					.disable();
 		}
 
-		@Bean
-		protected XXXUserDetailsService xxxUserDetailsService() {
-			return new XXXUserDetailsService();
-		}
-
-		@Override
-		protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-			auth.userDetailsService(xxxUserDetailsService());
-		}
+//		@Bean
+//		protected XXXUserDetailsService xxxUserDetailsService() {
+//			return new XXXUserDetailsService();
+//		}
+//
+//		@Override
+//		protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//			auth.userDetailsService(xxxUserDetailsService());
+//		}
 
 		@Bean
 		public static PasswordEncoder passwordEncoder() {
@@ -166,11 +164,11 @@ public class PlatformApplication {
 	@GetMapping(value = "/getSessionUserInfo")
 	@ResponseBody
 	@Transactional
-	public ApiResult<PlatformUser> getSessionUserInfo() {
+	public ApiResult<User> getSessionUserInfo() {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if(principal  != null && principal instanceof UserDetails) {
-			PlatformUser platformUser = (PlatformUser) principal;
-			return ApiResultBuilder.create().code(ApiResultCode.Success.code()).data(platformUser).build();
+			User user = (User) principal;
+			return ApiResultBuilder.create().code(ApiResultCode.Success.code()).data(user).build();
 		} else {
 			return ApiResultBuilder.create().code(ApiResultCode.DataNotExist.code()).msg("数据不存在").build();
 		}
