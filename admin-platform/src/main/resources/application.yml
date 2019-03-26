@@ -3,7 +3,7 @@ server:
   servlet:
     context-path: /lucky
     session:
-      timeout: 7200
+      timeout: 1800
 
 multipart:
   maxFileSize: 10Mb
@@ -11,7 +11,7 @@ multipart:
 
 logging:
   level.org.apache.coyote.http11.Http11InputBuffer: trace
-  level.cn.sambo: debug
+  level.com.lucky: debug
 
 spring:
   datasource:
@@ -55,11 +55,11 @@ mybatis:
   type-aliases-package: com.lucky.admin.platform.vo
 
 file:
-  urlPrefix: http://localhost:8090/platform/files/
+  urlPrefix: http://localhost:8090/lucky/files/
   store:
-      path: c:/temp
+      path: D:/Recycle/temp
 
 pdf:
-  urlPrefix: http://localhost:8090/platform/reporter/
+  urlPrefix: http://localhost:8090/lucky/reporter/
   store:
-      path: c:/temp
+      path: D:/Recycle/temp
