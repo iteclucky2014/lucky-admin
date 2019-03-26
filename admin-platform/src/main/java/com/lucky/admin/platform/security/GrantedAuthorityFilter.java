@@ -28,11 +28,11 @@ public class GrantedAuthorityFilter extends GenericFilterBean {
     private final static Logger logger = LoggerFactory.getLogger(GrantedAuthorityFilter.class);
 
     private static final String[] checkURIs = {
-            "/platform/machine/**",
-            "/platform/crop/**",
-            "/platform/permission/**",
-            "/platform/role/**",
-            "/platform/user/**",
+            "/lucky/machine/**",
+            "/lucky/crop/**",
+            "/lucky/permission/**",
+            "/lucky/role/**",
+            "/lucky/user/**",
     };
 
     @Override

@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.lucky.admin.platform.common.ApiResult;
 import com.lucky.admin.platform.common.ApiResultBuilder;
 import com.lucky.admin.platform.common.ApiResultCode;
-import com.lucky.admin.platform.security.AccessToken;
 import com.lucky.admin.platform.security.AccessTokenFilter;
 import com.lucky.admin.platform.security.GrantedAuthorityFilter;
 import com.lucky.admin.platform.vo.User;
@@ -64,7 +63,7 @@ public class PlatformApplication {
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http.authorizeRequests()
-                    .antMatchers("platform/api/**", "platform/images/**")
+                    .antMatchers("lucky/api/**", "lucky/images/**")
                     .permitAll()
 					.and()
 					.addFilterAfter(new AccessTokenFilter(), FilterSecurityInterceptor.class)
@@ -85,7 +84,7 @@ public class PlatformApplication {
 							Object principal  = authentication.getPrincipal();
 							if(principal  != null && principal  instanceof UserDetails) {
 								User user = (User) principal;
-								AccessToken accessToken = new AccessToken(DigestUtils.sha256Hex(user.getUsername() + System.currentTimeMillis()), null);
+								String accessToken = DigestUtils.sha256Hex(user.getUsername() + System.currentTimeMillis());
 								result.put("code", 0);
 								result.put("msg", "登入成功");
 								result.put("data", accessToken);

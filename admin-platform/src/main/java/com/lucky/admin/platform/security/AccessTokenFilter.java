@@ -21,10 +21,10 @@ public class AccessTokenFilter extends GenericFilterBean {
     private final static Logger logger = LoggerFactory.getLogger(AccessTokenFilter.class);
 
     private static final String[] checkURIs = {
-            "/platform/codeList/**",
-            "/platform/permission/**",
-            "/platform/role/**",
-            "/platform/user/**",
+            "/lucky/codeList/**",
+            "/lucky/permission/**",
+            "/lucky/role/**",
+            "/lucky/user/**",
     };
 
     @Override
@@ -49,8 +49,8 @@ public class AccessTokenFilter extends GenericFilterBean {
 
         // 如果至少匹配一个，则检查access_token
         if (mached) {
-            AccessToken accessToken = (AccessToken) httpRequest.getSession().getAttribute("access_token");
-            if (accessToken != null && accessToken.getAccess_token().equals(httpRequest.getParameter("access_token"))) {
+            String accessToken = (String) httpRequest.getSession().getAttribute("access_token");
+            if (accessToken != null && accessToken.equals(httpRequest.getParameter("access_token"))) {
                 filterChain.doFilter(servletRequest, servletResponse);
                 return;
             } else {
