@@ -21,10 +21,8 @@ public class AccessTokenFilter extends GenericFilterBean {
     private final static Logger logger = LoggerFactory.getLogger(AccessTokenFilter.class);
 
     private static final String[] checkURIs = {
-            "/lucky/codeList/**",
-            "/lucky/permission/**",
             "/lucky/role/**",
-            "/lucky/user/**",
+            "/lucky/user/**"
     };
 
     @Override

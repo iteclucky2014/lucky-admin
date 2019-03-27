@@ -63,7 +63,7 @@ public class PlatformApplication {
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http.authorizeRequests()
-                    .antMatchers("lucky/api/**", "lucky/images/**")
+                    .antMatchers("/lucky/role/**", "/lucky/user/**")
                     .permitAll()
 					.and()
 					.addFilterAfter(new AccessTokenFilter(), FilterSecurityInterceptor.class)
