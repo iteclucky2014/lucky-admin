@@ -1,12 +1,9 @@
 package com.lucky.admin.platform;
 
-import com.alibaba.fastjson.JSON;
-import com.lucky.admin.platform.common.ApiResult;
-import com.lucky.admin.platform.common.ApiResultBuilder;
-import com.lucky.admin.platform.common.ApiResultCode;
-import com.lucky.admin.platform.security.AccessTokenFilter;
-import com.lucky.admin.platform.security.GrantedAuthorityFilter;
-import com.lucky.admin.platform.vo.User;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.codec.digest.DigestUtils;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
@@ -21,28 +18,23 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
+import com.alibaba.fastjson.JSON;
+import com.lucky.admin.platform.common.ApiResult;
+import com.lucky.admin.platform.common.ApiResultBuilder;
+import com.lucky.admin.platform.common.ApiResultCode;
+import com.lucky.admin.platform.security.AccessTokenFilter;
+import com.lucky.admin.platform.vo.User;
 
 @MapperScan("com.lucky.admin.platform.dao")
 @SpringBootApplication(scanBasePackages = {"com.lucky"})
@@ -66,66 +58,48 @@ public class PlatformApplication {
                     .permitAll()
 					.and()
 					.addFilterAfter(new AccessTokenFilter(), FilterSecurityInterceptor.class)
-					.addFilterAfter(new GrantedAuthorityFilter(), AccessTokenFilter.class)
+//					.addFilterAfter(new GrantedAuthorityFilter(), AccessTokenFilter.class)
 					.formLogin()
 					.loginPage("/start/index.html#/user/login")
 					.loginProcessingUrl("/login")
-					.successHandler(new AuthenticationSuccessHandler() {
-						@Override
-						public void onAuthenticationSuccess(HttpServletRequest httpServletRequest,
-															HttpServletResponse httpServletResponse,
-															Authentication authentication)
-								throws IOException {
-							httpServletResponse.setContentType("application/json;charset=utf-8");
-							PrintWriter out = httpServletResponse.getWriter();
+					.successHandler((httpServletRequest, httpServletResponse, authentication) -> {
+						httpServletResponse.setContentType("application/json;charset=utf-8");
+						PrintWriter out = httpServletResponse.getWriter();
 
-							Map<String, Object> result = new HashMap<>();
-							Object principal  = authentication.getPrincipal();
-							if(principal  != null && principal  instanceof UserDetails) {
-								User user = (User) principal;
-								String accessToken = DigestUtils.sha256Hex(user.getUsername() + System.currentTimeMillis());
-								result.put("code", 0);
-								result.put("msg", "登入成功");
-								result.put("data", accessToken);
+						Map<String, Object> result = new HashMap<>();
+						Object principal  = authentication.getPrincipal();
+						if(principal  != null && principal  instanceof UserDetails) {
+							User user = (User) principal;
+							String accessToken = DigestUtils.sha256Hex(user.getUsername() + System.currentTimeMillis());
+							result.put("code", 0);
+							result.put("msg", "登入成功");
+							result.put("data", accessToken);
 
-								httpServletRequest.getSession().setAttribute("access_token", accessToken);
+							httpServletRequest.getSession().setAttribute("access_token", accessToken);
 
-								out.write(JSON.toJSONString(result));
-							} else {
-								out.write("{\"code\":1001,\"msg\":\"用户名或密码错误！\"}");
-							}
-							out.flush();
-							out.close();
-						}
-					})
-					.failureHandler(new AuthenticationFailureHandler() {
-						@Override
-						public void onAuthenticationFailure(HttpServletRequest httpServletRequest,
-															HttpServletResponse httpServletResponse,
-															AuthenticationException e)
-								throws IOException {
-							httpServletResponse.setContentType("application/json;charset=utf-8");
-							PrintWriter out = httpServletResponse.getWriter();
+							out.write(JSON.toJSONString(result));
+						} else {
 							out.write("{\"code\":1001,\"msg\":\"用户名或密码错误！\"}");
-							out.flush();
-							out.close();
 						}
+						out.flush();
+						out.close();
+					})
+					.failureHandler((httpServletRequest, httpServletResponse, authenticationException) -> {
+						httpServletResponse.setContentType("application/json;charset=utf-8");
+						PrintWriter out = httpServletResponse.getWriter();
+						out.write("{\"code\":1001,\"msg\":\"用户名或密码错误！\"}");
+						out.flush();
+						out.close();
 					})
 					.and()
 					.logout()
 					.logoutUrl("/logout")
-					.logoutSuccessHandler(new LogoutSuccessHandler() {
-						@Override
-						public void onLogoutSuccess(HttpServletRequest httpServletRequest,
-													HttpServletResponse httpServletResponse,
-													Authentication authentication)
-								throws IOException {
-							httpServletResponse.setContentType("application/json;charset=utf-8");
-							PrintWriter out = httpServletResponse.getWriter();
-							out.write("{\"code\":0,\"msg\":\"注销成功\"}");
-							out.flush();
-							out.close();
-						}
+					.logoutSuccessHandler((httpServletRequest, httpServletResponse, authentication) -> {
+						httpServletResponse.setContentType("application/json;charset=utf-8");
+						PrintWriter out = httpServletResponse.getWriter();
+						out.write("{\"code\":0,\"msg\":\"注销成功\"}");
+						out.flush();
+						out.close();
 					})
 					.invalidateHttpSession(true)
 					.clearAuthentication(true)
@@ -162,7 +136,7 @@ public class PlatformApplication {
 	@GetMapping(value = "/getSessionUserInfo")
 	@ResponseBody
 	@Transactional
-	public ApiResult<User> getSessionUserInfo() {
+	public ApiResult getSessionUserInfo() {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if(principal  != null && principal instanceof UserDetails) {
 			User user = (User) principal;
