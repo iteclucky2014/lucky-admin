@@ -25,7 +25,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -37,7 +37,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -63,7 +62,7 @@ public class PlatformApplication {
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http.authorizeRequests()
-                    .antMatchers("/lucky/role/**", "/lucky/user/**")
+                    .antMatchers("/lucky/", "/lucky/src/**", "/lucky/start/**", "/lucky/login", "/lucky/logout", "/lucky/user/register")
                     .permitAll()
 					.and()
 					.addFilterAfter(new AccessTokenFilter(), FilterSecurityInterceptor.class)
@@ -76,7 +75,7 @@ public class PlatformApplication {
 						public void onAuthenticationSuccess(HttpServletRequest httpServletRequest,
 															HttpServletResponse httpServletResponse,
 															Authentication authentication)
-								throws IOException, ServletException {
+								throws IOException {
 							httpServletResponse.setContentType("application/json;charset=utf-8");
 							PrintWriter out = httpServletResponse.getWriter();
 
@@ -104,7 +103,7 @@ public class PlatformApplication {
 						public void onAuthenticationFailure(HttpServletRequest httpServletRequest,
 															HttpServletResponse httpServletResponse,
 															AuthenticationException e)
-								throws IOException, ServletException {
+								throws IOException {
 							httpServletResponse.setContentType("application/json;charset=utf-8");
 							PrintWriter out = httpServletResponse.getWriter();
 							out.write("{\"code\":1001,\"msg\":\"用户名或密码错误！\"}");
@@ -120,7 +119,7 @@ public class PlatformApplication {
 						public void onLogoutSuccess(HttpServletRequest httpServletRequest,
 													HttpServletResponse httpServletResponse,
 													Authentication authentication)
-								throws IOException, ServletException {
+								throws IOException {
 							httpServletResponse.setContentType("application/json;charset=utf-8");
 							PrintWriter out = httpServletResponse.getWriter();
 							out.write("{\"code\":0,\"msg\":\"注销成功\"}");
@@ -151,7 +150,7 @@ public class PlatformApplication {
 
 		@Bean
 		public static PasswordEncoder passwordEncoder() {
-			return NoOpPasswordEncoder.getInstance();
+			return new BCryptPasswordEncoder();
 		}
 	}
 

@@ -4,7 +4,7 @@
 </script>
 
 
-<div class="layadmin-user-login layadmin-user-display-show" id="LAY-user-login" style="display: none;padding-top: 400px;">
+<div class="layadmin-user-login layadmin-user-display-show" id="LAY-user-login" style="display: none;">
 
   <div class="layadmin-user-login-main">
     <div class="layadmin-user-login-box layadmin-user-login-header">
@@ -91,7 +91,8 @@ layui.use(['admin', 'form', 'user'], function(){
   
     //请求登入接口
     admin.req({
-      url: './json/user/login.js' //实际使用请改成服务端真实接口
+      url: '/lucky/login' //实际使用请改成服务端真实接口
+      ,type: 'POST'
       ,data: obj.field
       ,done: function(res){
       

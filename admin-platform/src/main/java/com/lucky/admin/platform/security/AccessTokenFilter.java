@@ -20,9 +20,13 @@ public class AccessTokenFilter extends GenericFilterBean {
 
     private final static Logger logger = LoggerFactory.getLogger(AccessTokenFilter.class);
 
-    private static final String[] checkURIs = {
-            "/lucky/role/**",
-            "/lucky/user/**"
+    private static final String[] unCheckURIs = {
+            "/lucky/",
+            "/lucky/src/**",
+            "/lucky/start/**",
+            "/lucky/login",
+            "/lucky/logout",
+            "/lucky/user/register"
     };
 
     @Override
@@ -37,10 +41,10 @@ public class AccessTokenFilter extends GenericFilterBean {
         AntPathMatcher antPathMatcher = new AntPathMatcher();
 
         // 匹配
-        boolean mached = false;
-        for (String checkURI : checkURIs) {
-            if (antPathMatcher.match(checkURI, requestURI)) {
-                mached = true;
+        boolean mached = true;
+        for (String unCheckURI : unCheckURIs) {
+            if (antPathMatcher.match(unCheckURI, requestURI)) {
+                mached = false;
                 break;
             }
         }
