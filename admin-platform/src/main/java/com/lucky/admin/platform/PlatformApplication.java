@@ -4,6 +4,8 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.lucky.admin.platform.security.AccessToken;
+import com.lucky.admin.platform.security.LoginService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
@@ -16,6 +18,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -70,7 +73,7 @@ public class PlatformApplication {
 						Object principal  = authentication.getPrincipal();
 						if(principal  != null && principal  instanceof UserDetails) {
 							User user = (User) principal;
-							String accessToken = DigestUtils.sha256Hex(user.getUsername() + System.currentTimeMillis());
+							AccessToken accessToken = new AccessToken(DigestUtils.sha256Hex(user.getUsername() + System.currentTimeMillis()), null);
 							result.put("code", 0);
 							result.put("msg", "登入成功");
 							result.put("data", accessToken);
@@ -112,15 +115,15 @@ public class PlatformApplication {
 					.disable();
 		}
 
-//		@Bean
-//		protected XXXUserDetailsService xxxUserDetailsService() {
-//			return new XXXUserDetailsService();
-//		}
-//
-//		@Override
-//		protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//			auth.userDetailsService(xxxUserDetailsService());
-//		}
+		@Bean
+		protected LoginService loginService() {
+			return new LoginService();
+		}
+
+		@Override
+		protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+			auth.userDetailsService(loginService());
+		}
 
 		@Bean
 		public static PasswordEncoder passwordEncoder() {

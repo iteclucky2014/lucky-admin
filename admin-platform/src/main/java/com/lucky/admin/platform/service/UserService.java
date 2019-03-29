@@ -10,8 +10,8 @@ public class UserService {
 	@Autowired
 	private UserMapper userMapper;
 
-	public String getUserById(String id) {
-		return userMapper.selectByPrimaryKey(id);
+	public String getUserByUsername(String username) {
+		return (String)userMapper.getUserByUsername(username).get("NICKNAME");
 	}
 
 //	@Override
@@ -28,5 +28,4 @@ public class UserService {
 //	public List<User> getAll3() {
 //		return userMapper.getAll3();
 //	}
-
 }

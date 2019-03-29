@@ -15,9 +15,9 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-	@RequestMapping("/{id}/showUser")
-	public String showUser(@PathVariable String id, HttpServletRequest request) {
-		String u = userService.getUserById(id);
+	@RequestMapping("/{username}/showUser")
+	public String showUser(@PathVariable String username, HttpServletRequest request) {
+		String u = userService.getUserByUsername(username);
 		request.setAttribute("user", u);
 		return u;
 	}

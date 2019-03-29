@@ -12,13 +12,13 @@
 		<!--<result column="UPDATE_TIME" property="updateTime" jdbcType="DATE" />-->
 	<!--</resultMap>-->
 	<sql id="Base_Column_List">
-		ID, NAME, PWD, TEL, EMAIL, ROLE_ID, CREATE_TIME, UPDATE_TIME
+		ID, USERNAME, NICKNAME, PASSWORD, MOBILE, EMAIL, ROLE_ID, CREATE_TIME, UPDATE_TIME, IS_DELETE
 	</sql>
-	<select id="selectByPrimaryKey" resultType="java.lang.String" parameterType="java.lang.String">
+	<select id="getUserByUsername" resultType="java.util.Map" parameterType="java.lang.String">
 		select
-			NAME
+		<include refid="Base_Column_List" />
 		from tuser
-		where ID = #{id,jdbcType=VARCHAR}
+		where USERNAME = #{username,jdbcType=VARCHAR}
 	</select>
 	<!--<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from tuser
