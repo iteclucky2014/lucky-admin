@@ -26,7 +26,8 @@ public class AccessTokenFilter extends GenericFilterBean {
             "/lucky/start/**",
             "/lucky/login",
             "/lucky/logout",
-            "/lucky/user/register"
+            "/lucky/user/register",
+            "/lucky/user/forget"
     };
 
     @Override
@@ -41,16 +42,16 @@ public class AccessTokenFilter extends GenericFilterBean {
         AntPathMatcher antPathMatcher = new AntPathMatcher();
 
         // 匹配
-        boolean mached = true;
+        boolean matched = true;
         for (String unCheckURI : unCheckURIs) {
             if (antPathMatcher.match(unCheckURI, requestURI)) {
-                mached = false;
+                matched = false;
                 break;
             }
         }
 
         // 如果至少匹配一个，则检查access_token
-        if (mached) {
+        if (matched) {
             String accessToken = (String) httpRequest.getSession().getAttribute("access_token");
             if (accessToken != null && accessToken.equals(httpRequest.getParameter("access_token"))) {
                 filterChain.doFilter(servletRequest, servletResponse);

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("/userController")
+@RequestMapping("/user")
 public class UserController {
 
 	@Autowired
@@ -17,9 +17,9 @@ public class UserController {
 
 	@RequestMapping("/{username}/showUser")
 	public String showUser(@PathVariable String username, HttpServletRequest request) {
-		String u = userService.getUserByUsername(username);
-		request.setAttribute("user", u);
-		return u;
+		String user = userService.getUserByUsername(username);
+		request.setAttribute("user", user);
+		return user;
 	}
 
 }

@@ -33,7 +33,8 @@ public class GrantedAuthorityFilter extends GenericFilterBean {
             "/lucky/start/**",
             "/lucky/login",
             "/lucky/logout",
-            "/lucky/user/register"
+            "/lucky/user/register",
+            "/lucky/user/forget"
     };
 
     @Override
@@ -48,15 +49,15 @@ public class GrantedAuthorityFilter extends GenericFilterBean {
         AntPathMatcher antPathMatcher = new AntPathMatcher();
 
         // 匹配
-        boolean mached = true;
+        boolean matched = true;
         for (String unCheckURI : unCheckURIs) {
             if (antPathMatcher.match(unCheckURI, requestURI)) {
-                mached = false;
+                matched = false;
                 break;
             }
         }
 
-        if (mached) {
+        if (matched) {
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             if(principal != null && principal instanceof UserDetails) {
                 User user = (User) principal;

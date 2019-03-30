@@ -11,7 +11,7 @@ public class UserService {
 	private UserMapper userMapper;
 
 	public String getUserByUsername(String username) {
-		return (String)userMapper.getUserByUsername(username).get("NICKNAME");
+		return userMapper.getUserByUsername(username).getNickname();
 	}
 
 //	@Override

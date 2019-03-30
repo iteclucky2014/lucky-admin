@@ -1,20 +1,19 @@
 package com.lucky.admin.platform.dao;
 
+import com.lucky.admin.platform.vo.User;
 import org.springframework.stereotype.Repository;
-
-import java.util.Map;
 
 @Repository
 public interface UserMapper {
+
+	User getUserByUsername(String username);
 	
 //	int deleteByPrimaryKey(String id);
 //
 //	int insert(User record);
 //
 //	int insertSelective(User record);
-
-	Map getUserByUsername(String username);
-
+//
 //	int updateByPrimaryKeySelective(User record);
 //
 //	int updateByPrimaryKey(User record);
