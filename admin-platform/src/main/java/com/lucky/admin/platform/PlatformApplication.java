@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.lucky.admin.platform.security.AccessToken;
+import com.lucky.admin.platform.security.GrantedAuthorityFilter;
 import com.lucky.admin.platform.security.LoginService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.mybatis.spring.annotation.MapperScan;
@@ -61,7 +62,7 @@ public class PlatformApplication {
                     .permitAll()
 					.and()
 					.addFilterAfter(new AccessTokenFilter(), FilterSecurityInterceptor.class)
-//					.addFilterAfter(new GrantedAuthorityFilter(), AccessTokenFilter.class)
+					.addFilterAfter(new GrantedAuthorityFilter(), AccessTokenFilter.class)
 					.formLogin()
 					.loginPage("/start/index.html#/user/login")
 					.loginProcessingUrl("/login")
@@ -115,20 +116,29 @@ public class PlatformApplication {
 					.disable();
 		}
 
-		@Bean
-		protected LoginService loginService() {
-			return new LoginService();
-		}
-
 		@Override
 		protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 			auth.userDetailsService(loginService());
 		}
 
 		@Bean
+		protected LoginService loginService() {
+			return new LoginService();
+		}
+
+		@Bean
 		public static PasswordEncoder passwordEncoder() {
 			return new BCryptPasswordEncoder();
 		}
+	}
+
+	@Bean
+	public static PropertySourcesPlaceholderConfigurer properties() {
+		PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
+		YamlPropertiesFactoryBean yaml = new YamlPropertiesFactoryBean();
+		yaml.setResources(new ClassPathResource("application.yml"), new ClassPathResource("fieldDef.yml"));
+		configurer.setProperties(yaml.getObject());
+		return configurer;
 	}
 
 	@RequestMapping(value = {"/"})
@@ -147,14 +157,5 @@ public class PlatformApplication {
 		} else {
 			return ApiResultBuilder.create().code(ApiResultCode.DataNotExist.code()).msg("数据不存在").build();
 		}
-	}
-    
-	@Bean
-	public static PropertySourcesPlaceholderConfigurer properties() {
-		PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
-		YamlPropertiesFactoryBean yaml = new YamlPropertiesFactoryBean();
-		yaml.setResources(new ClassPathResource("application.yml"), new ClassPathResource("fieldDef.yml"));
-		configurer.setProperties(yaml.getObject());
-		return configurer;
 	}
 }
