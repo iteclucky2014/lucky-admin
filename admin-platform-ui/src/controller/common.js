@@ -4,10 +4,10 @@ layui.define(function(e) {
     var i = (layui.$, layui.layer, layui.laytpl, layui.setter, layui.view, layui.admin);
     i.events.logout = function() {
         i.req({
-            url: "./json/user/logout.js",
-            type: "get",
+            url: "/lucky/logout",
+            type: "POST",
             data: {},
-            done: function(e) {
+            success: function(e) {
                 i.exit()
             }
         })

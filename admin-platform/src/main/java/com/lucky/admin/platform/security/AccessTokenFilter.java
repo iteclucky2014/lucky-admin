@@ -52,8 +52,8 @@ public class AccessTokenFilter extends GenericFilterBean {
 
         // 如果至少匹配一个，则检查access_token
         if (matched) {
-            String accessToken = (String) httpRequest.getSession().getAttribute("access_token");
-            if (accessToken != null && accessToken.equals(httpRequest.getParameter("access_token"))) {
+            AccessToken accessToken = (AccessToken) httpRequest.getSession().getAttribute("access_token");
+            if (accessToken != null && accessToken.getAccess_token().equals(httpRequest.getParameter("access_token"))) {
                 filterChain.doFilter(servletRequest, servletResponse);
                 return;
             } else {

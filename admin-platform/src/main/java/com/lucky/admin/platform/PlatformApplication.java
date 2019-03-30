@@ -1,12 +1,13 @@
 package com.lucky.admin.platform;
 
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.alibaba.fastjson.JSON;
+import com.lucky.admin.platform.common.ApiResult;
+import com.lucky.admin.platform.common.ApiResultBuilder;
+import com.lucky.admin.platform.common.ApiResultCode;
 import com.lucky.admin.platform.security.AccessToken;
-import com.lucky.admin.platform.security.GrantedAuthorityFilter;
+import com.lucky.admin.platform.security.AccessTokenFilter;
 import com.lucky.admin.platform.security.LoginService;
+import com.lucky.admin.platform.vo.User;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
@@ -28,17 +29,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSON;
-import com.lucky.admin.platform.common.ApiResult;
-import com.lucky.admin.platform.common.ApiResultBuilder;
-import com.lucky.admin.platform.common.ApiResultCode;
-import com.lucky.admin.platform.security.AccessTokenFilter;
-import com.lucky.admin.platform.vo.User;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 @MapperScan("com.lucky.admin.platform.dao")
 @SpringBootApplication(scanBasePackages = {"com.lucky"})
@@ -62,7 +59,7 @@ public class PlatformApplication {
                     .permitAll()
 					.and()
 					.addFilterAfter(new AccessTokenFilter(), FilterSecurityInterceptor.class)
-					.addFilterAfter(new GrantedAuthorityFilter(), AccessTokenFilter.class)
+//					.addFilterAfter(new GrantedAuthorityFilter(), AccessTokenFilter.class)
 					.formLogin()
 					.loginPage("/start/index.html#/user/login")
 					.loginProcessingUrl("/login")
@@ -101,6 +98,7 @@ public class PlatformApplication {
 					.logoutSuccessHandler((httpServletRequest, httpServletResponse, authentication) -> {
 						httpServletResponse.setContentType("application/json;charset=utf-8");
 						PrintWriter out = httpServletResponse.getWriter();
+						httpServletRequest.getSession().removeAttribute("access_token");
 						out.write("{\"code\":0,\"msg\":\"注销成功\"}");
 						out.flush();
 						out.close();
@@ -148,14 +146,13 @@ public class PlatformApplication {
 
 	@GetMapping(value = "/getSessionUserInfo")
 	@ResponseBody
-	@Transactional
 	public ApiResult getSessionUserInfo() {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if(principal  != null && principal instanceof UserDetails) {
 			User user = (User) principal;
 			return ApiResultBuilder.create().code(ApiResultCode.Success.code()).data(user).build();
 		} else {
-			return ApiResultBuilder.create().code(ApiResultCode.DataNotExist.code()).msg("数据不存在").build();
+			return ApiResultBuilder.create().code(ApiResultCode.DataNotExist.code()).msg(ApiResultCode.DataNotExist.msg()).build();
 		}
 	}
 }
