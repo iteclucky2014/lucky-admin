@@ -29,6 +29,7 @@ public class GrantedAuthorityFilter extends GenericFilterBean {
 
     private static final String[] unCheckURIs = {
             "/lucky/",
+            "/lucky/getSessionAccessToken",
             "/lucky/src/**",
             "/lucky/start/**",
             "/lucky/login",

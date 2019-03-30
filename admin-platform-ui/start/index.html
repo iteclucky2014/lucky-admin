@@ -19,7 +19,29 @@
   layui.config({
     base: '../src/' //指定 layuiAdmin 项目路径，本地开发用 src，线上用 dist
     ,version: '1.1.0'
-  }).use('index');
+  }).use('index', function() {
+    var $ = layui.$,
+            setter = layui.setter;
+    $.ajax({
+      url: '/lucky/getSessionAccessToken'
+      , type: 'GET'
+      , async: false
+      , success: function(res) {
+        if (res.code !== 0) {
+          layui.data(setter.tableName, {
+            key: setter.request.tokenName
+            , remove: true
+          });
+        }
+      }
+      , error: function(res) {
+        layer.msg(res, {
+          icon: 5
+          ,time: 1000
+        });
+      }
+    });
+  });
   </script>
 </body>
 </html>

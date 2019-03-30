@@ -33,6 +33,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,7 +57,7 @@ public class PlatformApplication {
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http.authorizeRequests()
-                    .antMatchers("/lucky/", "/lucky/src/**", "/lucky/start/**", "/lucky/login", "/lucky/logout", "/lucky/user/register", "/lucky/user/forget")
+                    .antMatchers("/lucky/", "/lucky/getSessionAccessToken", "/lucky/src/**", "/lucky/start/**", "/lucky/login", "/lucky/logout", "/lucky/user/register", "/lucky/user/forget")
                     .permitAll()
 					.and()
 					.addFilterAfter(new AccessTokenFilter(), FilterSecurityInterceptor.class)
@@ -142,6 +144,18 @@ public class PlatformApplication {
 	@RequestMapping(value = {"/"})
 	public String index() {
 		return "redirect:/start/index.html";
+	}
+
+	@GetMapping(value = "/getSessionAccessToken")
+	@ResponseBody
+	public ApiResult getSessionAccessToken(ServletRequest servletRequest) {
+		HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
+		AccessToken accessToken = (AccessToken) httpRequest.getSession().getAttribute("access_token");
+		if (accessToken != null) {
+			return ApiResultBuilder.create().code(ApiResultCode.Success.code()).data(accessToken).build();
+		} else {
+			return ApiResultBuilder.create().code(ApiResultCode.DataNotExist.code()).msg(ApiResultCode.DataNotExist.msg()).build();
+		}
 	}
 
 	@GetMapping(value = "/getSessionUserInfo")
