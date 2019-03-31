@@ -24,6 +24,7 @@
 		<include refid="Base_Column_List" />
 		from tuser
 		where USERNAME = #{username,jdbcType=VARCHAR}
+		and IS_DELETE = '0'
 	</select>
 	
 	<!--<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
