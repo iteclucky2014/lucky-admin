@@ -22,9 +22,9 @@ public class AccessTokenFilter extends GenericFilterBean {
 
     private static final String[] unCheckURIs = {
             "/lucky/",
-            "/lucky/getSessionAccessToken",
             "/lucky/src/**",
             "/lucky/start/**",
+            "/lucky/getSessionAccessToken",
             "/lucky/login",
             "/lucky/logout",
             "/lucky/user/register",

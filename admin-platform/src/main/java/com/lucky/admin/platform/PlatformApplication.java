@@ -57,7 +57,7 @@ public class PlatformApplication {
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http.authorizeRequests()
-                    .antMatchers("/lucky/", "/lucky/getSessionAccessToken", "/lucky/src/**", "/lucky/start/**", "/lucky/login", "/lucky/logout", "/lucky/user/register", "/lucky/user/forget")
+                    .antMatchers("/lucky/", "/lucky/src/**", "/lucky/start/**", "/lucky/getSessionAccessToken", "/lucky/login", "/lucky/logout", "/lucky/user/register", "/lucky/user/forget")
                     .permitAll()
 					.and()
 					.addFilterAfter(new AccessTokenFilter(), FilterSecurityInterceptor.class)
