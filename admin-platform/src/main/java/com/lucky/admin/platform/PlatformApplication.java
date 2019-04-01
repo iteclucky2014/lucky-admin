@@ -57,7 +57,7 @@ public class PlatformApplication {
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http.authorizeRequests()
-                    .antMatchers("/lucky/", "/lucky/src/**", "/lucky/start/**", "/lucky/getSessionAccessToken", "/lucky/login", "/lucky/logout", "/lucky/user/register", "/lucky/user/forget")
+                    .antMatchers("/lucky/", "/lucky/src/**", "/lucky/start/**", "/lucky/getSessionAccessToken", "/lucky/login", "/lucky/logout", "/lucky/user/register")
                     .permitAll()
 					.and()
 					.addFilterAfter(new AccessTokenFilter(), FilterSecurityInterceptor.class)
@@ -153,18 +153,6 @@ public class PlatformApplication {
 		AccessToken accessToken = (AccessToken) httpRequest.getSession().getAttribute("access_token");
 		if (accessToken != null) {
 			return ApiResultBuilder.create().code(ApiResultCode.Success.code()).data(accessToken).build();
-		} else {
-			return ApiResultBuilder.create().code(ApiResultCode.DataNotExist.code()).msg(ApiResultCode.DataNotExist.msg()).build();
-		}
-	}
-
-	@GetMapping(value = "/getSessionUserInfo")
-	@ResponseBody
-	public ApiResult getSessionUserInfo() {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if(principal  != null && principal instanceof UserDetails) {
-			User user = (User) principal;
-			return ApiResultBuilder.create().code(ApiResultCode.Success.code()).data(user).build();
 		} else {
 			return ApiResultBuilder.create().code(ApiResultCode.DataNotExist.code()).msg(ApiResultCode.DataNotExist.msg()).build();
 		}
