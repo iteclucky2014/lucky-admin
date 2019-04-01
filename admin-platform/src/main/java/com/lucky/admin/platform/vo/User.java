@@ -4,7 +4,6 @@ import com.lucky.admin.platform.common.BaseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.sql.Blob;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,7 +17,7 @@ public class User extends BaseEntity implements UserDetails {
 
 	private String password;
 
-	private Blob avatar;
+	private String avatar;
 
 	private String nickname;
 
@@ -28,7 +27,7 @@ public class User extends BaseEntity implements UserDetails {
 	
 	private String email;
 
-	private String desc;
+	private String description;
 	
 	private int roleId;
 
@@ -64,11 +63,11 @@ public class User extends BaseEntity implements UserDetails {
 		this.password = password;
 	}
 
-	public Blob getAvatar() {
+	public String getAvatar() {
 		return avatar;
 	}
 
-	public void setAvatar(Blob avatar) {
+	public void setAvatar(String avatar) {
 		this.avatar = avatar;
 	}
 
@@ -104,12 +103,12 @@ public class User extends BaseEntity implements UserDetails {
 		this.email = email;
 	}
 
-	public String getDesc() {
-		return desc;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setDesc(String desc) {
-		this.desc = desc;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public int getRoleId() {
