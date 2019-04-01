@@ -27,7 +27,7 @@ public class AccessTokenFilter extends GenericFilterBean {
             "/lucky/getSessionAccessToken",
             "/lucky/login",
             "/lucky/logout",
-            "/lucky/user/register"
+            "/lucky/user/reg"
     };
 
     @Override
