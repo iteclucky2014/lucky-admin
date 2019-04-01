@@ -4,6 +4,7 @@ import com.lucky.admin.platform.common.BaseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.sql.Blob;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,13 +16,19 @@ public class User extends BaseEntity implements UserDetails {
 
 	private String username;
 
+	private String password;
+
+	private Blob avatar;
+
 	private String nickname;
 
-	private String password;
+	private char sex;
 	
 	private String mobile;
 	
 	private String email;
+
+	private String desc;
 	
 	private int roleId;
 
@@ -49,6 +56,22 @@ public class User extends BaseEntity implements UserDetails {
 		this.username = username;
 	}
 
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public Blob getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(Blob avatar) {
+		this.avatar = avatar;
+	}
+
 	public String getNickname() {
 		return nickname;
 	}
@@ -57,12 +80,12 @@ public class User extends BaseEntity implements UserDetails {
 		this.nickname = nickname;
 	}
 
-	public String getPassword() {
-		return password;
+	public char getSex() {
+		return sex;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public void setSex(char sex) {
+		this.sex = sex;
 	}
 
 	public String getMobile() {
@@ -79,6 +102,14 @@ public class User extends BaseEntity implements UserDetails {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getDesc() {
+		return desc;
+	}
+
+	public void setDesc(String desc) {
+		this.desc = desc;
 	}
 
 	public int getRoleId() {
