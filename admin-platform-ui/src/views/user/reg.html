@@ -11,22 +11,22 @@
     </div>
     <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
       <div class="layui-form-item">
-        <label class="layadmin-user-login-icon layui-icon layui-icon-cellphone" for="LAY-user-login-cellphone"></label>
-        <input type="text" name="cellphone" id="LAY-user-login-cellphone" lay-verify="phone" placeholder="手机" class="layui-input">
+        <label class="layadmin-user-login-icon layui-icon layui-icon-username" for="LAY-user-login-username"></label>
+        <input type="text" name="username" id="LAY-user-login-username" lay-verify="required" placeholder="用户名" class="layui-input">
       </div>
-      <div class="layui-form-item">
-        <div class="layui-row">
-          <div class="layui-col-xs7">
-            <label class="layadmin-user-login-icon layui-icon layui-icon-vercode" for="LAY-user-login-vercode"></label>
-            <input type="text" name="vercode" id="LAY-user-login-vercode" lay-verify="required" placeholder="验证码" class="layui-input">
-          </div>
-          <div class="layui-col-xs5">
-            <div style="margin-left: 10px;">
-              <button type="button" class="layui-btn layui-btn-primary layui-btn-fluid" id="LAY-user-reg-getsmscode">获取验证码</button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <!--<div class="layui-form-item">-->
+        <!--<div class="layui-row">-->
+          <!--<div class="layui-col-xs7">-->
+            <!--<label class="layadmin-user-login-icon layui-icon layui-icon-vercode" for="LAY-user-login-vercode"></label>-->
+            <!--<input type="text" name="vercode" id="LAY-user-login-vercode" lay-verify="required" placeholder="短信验证码" class="layui-input">-->
+          <!--</div>-->
+          <!--<div class="layui-col-xs5">-->
+            <!--<div style="margin-left: 10px;">-->
+              <!--<button type="button" class="layui-btn layui-btn-primary layui-btn-fluid" id="LAY-user-reg-getsmscode">获取验证码</button>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
       <div class="layui-form-item">
         <label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-password"></label>
         <input type="password" name="password" id="LAY-user-login-password" lay-verify="pass" placeholder="密码" class="layui-input">
@@ -36,8 +36,16 @@
         <input type="password" name="repass" id="LAY-user-login-repass" lay-verify="required" placeholder="确认密码" class="layui-input">
       </div>
       <div class="layui-form-item">
-        <label class="layadmin-user-login-icon layui-icon layui-icon-username" for="LAY-user-login-nickname"></label>
+        <label class="layadmin-user-login-icon layui-icon layui-icon-user" for="LAY-user-login-nickname"></label>
         <input type="text" name="nickname" id="LAY-user-login-nickname" lay-verify="nickname" placeholder="昵称" class="layui-input">
+      </div>
+      <div class="layui-form-item">
+        <label class="layadmin-user-login-icon layui-icon layui-icon-cellphone" for="LAY-user-login-cellphone"></label>
+        <input type="text" name="cellphone" id="LAY-user-login-cellphone" lay-verify="phone" placeholder="手机" class="layui-input">
+      </div>
+      <div class="layui-form-item">
+        <label class="layadmin-user-login-icon layui-icon layui-icon-form" for="LAY-user-login-email"></label>
+        <input type="text" name="email" id="LAY-user-login-email" lay-verify="email" placeholder="电子邮件" class="layui-input">
       </div>
       <div class="layui-form-item">
         <input type="checkbox" name="agreement" lay-skin="primary" title="同意用户协议" checked>
@@ -79,14 +87,14 @@ layui.use(['admin', 'form', 'user'], function(){
   form.render();
   
   //发送短信验证码
-  admin.sendAuthCode({
-    elem: '#LAY-user-reg-getsmscode'
-    ,elemPhone: '#LAY-user-login-cellphone'
-    ,elemVercode: '#LAY-user-login-vercode'
-    ,ajax: {
-      url: './json/user/sms.js' //实际使用请改成服务端真实接口
-    }
-  });
+//  admin.sendAuthCode({
+//    elem: '#LAY-user-reg-getsmscode'
+//    ,elemPhone: '#LAY-user-login-cellphone'
+//    ,elemVercode: '#LAY-user-login-vercode'
+//    ,ajax: {
+//      url: './json/user/sms.js' //实际使用请改成服务端真实接口
+//    }
+//  });
 
   //提交
   form.on('submit(LAY-user-reg-submit)', function(obj){
