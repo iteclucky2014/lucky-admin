@@ -75,7 +75,7 @@ public class PlatformApplication {
 							User user = (User) principal;
 							AccessToken accessToken = new AccessToken(DigestUtils.sha256Hex(user.getUsername() + System.currentTimeMillis()), null);
 							result.put("code", 0);
-							result.put("msg", "登入成功");
+							result.put("msg", "登录成功");
 							result.put("data", accessToken);
 
 							httpServletRequest.getSession().setAttribute("access_token", accessToken);

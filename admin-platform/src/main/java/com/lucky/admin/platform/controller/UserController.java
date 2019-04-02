@@ -1,5 +1,6 @@
 package com.lucky.admin.platform.controller;
 
+import com.lucky.admin.platform.common.ApiParams;
 import com.lucky.admin.platform.common.ApiResult;
 import com.lucky.admin.platform.common.ApiResultBuilder;
 import com.lucky.admin.platform.common.ApiResultCode;
@@ -8,9 +9,10 @@ import com.lucky.admin.platform.vo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/user")
@@ -19,7 +21,7 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-	@GetMapping(value = "/getSessionUserInfo")
+	@RequestMapping("/getSessionUserInfo")
 	@ResponseBody
 	public ApiResult getSessionUserInfo() {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -31,10 +33,20 @@ public class UserController {
 		}
 	}
 
-	@RequestMapping("/{username}/showUser")
-	public String showUser(@PathVariable String username, HttpServletRequest request) {
-		String user = userService.getUserByUsername(username);
-		request.setAttribute("user", user);
-		return user;
+	@RequestMapping("/reg")
+	@ResponseBody
+	public ApiResult regUser(@RequestBody ApiParams<User> params) {
+		if (params.getData() == null) {
+			return ApiResultBuilder.create().code(ApiResultCode.DataIllegality.code()).msg(ApiResultCode.DataIllegality.msg()).build();
+		}
+		User user = params.getData();
+		if (userService.getUserByUsername(user.getUsername()) != null) {
+			return ApiResultBuilder.create().code(1001).msg("该用户已存在").build();
+		}
+		if (userService.createUser(user) > 0) {
+			return ApiResultBuilder.create().code(ApiResultCode.Success.code()).msg("注册成功").build();
+		} else {
+			return ApiResultBuilder.create().code(1001).msg("注册失败").build();
+		}
 	}
 }

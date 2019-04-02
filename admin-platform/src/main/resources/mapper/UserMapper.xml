@@ -22,13 +22,75 @@
 		ID, USERNAME, PASSWORD, AVATAR, NICKNAME, SEX, MOBILE, EMAIL, DESCRIPTION, ROLE_ID, CREATE_TIME, UPDATE_TIME, IS_DELETE
 	</sql>
 	
-	<select id="getUserByUsername" resultMap="BaseResultMap" parameterType="java.lang.String">
+	<select id="getUserByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from tuser
 		where USERNAME = #{username,jdbcType=VARCHAR}
 		and IS_DELETE = '0'
 	</select>
+	
+	<insert id="createUser" parameterType="com.lucky.admin.platform.vo.User">
+		insert into tuser
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="username != null">
+				USERNAME,
+			</if>
+			<if test="password != null">
+				PASSWORD,
+			</if>
+			<if test="avatar != null">
+				AVATAR,
+			</if>
+			<if test="nickname != null">
+				NICKNAME,
+			</if>
+			<if test="sex != null">
+				SEX,
+			</if>
+			<if test="mobile != null">
+				MOBILE,
+			</if>
+			<if test="email != null">
+				EMAIL,
+			</if>
+			<if test="description != null">
+				DESCRIPTION,
+			</if>
+			<if test="roleId != null">
+				ROLE_ID,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="username != null">
+				#{username,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				#{password,jdbcType=VARCHAR},
+			</if>
+			<if test="avatar != null">
+				#{avatar,jdbcType=VARCHAR},
+			</if>
+			<if test="nickname != null">
+				#{nickname,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				#{sex,jdbcType=CHAR},
+			</if>
+			<if test="mobile != null">
+				#{mobile,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				#{email,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				#{description,jdbcType=VARCHAR},
+			</if>
+			<if test="roleId != null">
+				#{roleId,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
 	
 	<!--<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from tuser
@@ -41,55 +103,6 @@
 		values (#{id,jdbcType=VARCHAR}, #{createdatetime,jdbcType=TIMESTAMP}, #{modifydatetime,jdbcType=TIMESTAMP},
 		#{name,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, #{createTime,jdbcType=DATE},
 		#{updateTime,jdbcType=DATE})
-	</insert>
-	<insert id="insertSelective" parameterType="com.web.business.lucky.model.User">
-		insert into tuser
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null">
-				ID,
-			</if>
-			<if test="createdatetime != null">
-				CREATEDATETIME,
-			</if>
-			<if test="modifydatetime != null">
-				MODIFYDATETIME,
-			</if>
-			<if test="name != null">
-				NAME,
-			</if>
-			<if test="pwd != null">
-				PWD,
-			</if>
-			<if test="createTime != null">
-				CREATE_TIME,
-			</if>
-			<if test="updateTime != null">
-				UPDATE_TIME,
-			</if>
-		</trim>
-		<trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null">
-				#{id,jdbcType=VARCHAR},
-			</if>
-			<if test="createdatetime != null">
-				#{createdatetime,jdbcType=TIMESTAMP},
-			</if>
-			<if test="modifydatetime != null">
-				#{modifydatetime,jdbcType=TIMESTAMP},
-			</if>
-			<if test="name != null">
-				#{name,jdbcType=VARCHAR},
-			</if>
-			<if test="pwd != null">
-				#{pwd,jdbcType=VARCHAR},
-			</if>
-			<if test="createTime != null">
-				#{createTime,jdbcType=DATE},
-			</if>
-			<if test="updateTime != null">
-				#{updateTime,jdbcType=DATE},
-			</if>
-		</trim>
 	</insert>
 	<update id="updateByPrimaryKeySelective" parameterType="com.web.business.lucky.model.User">
 		update tuser

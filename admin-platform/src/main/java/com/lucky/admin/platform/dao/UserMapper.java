@@ -7,6 +7,8 @@ import org.springframework.stereotype.Repository;
 public interface UserMapper {
 
 	User getUserByUsername(String username);
+
+	int createUser(User user);
 	
 //	int deleteByPrimaryKey(String id);
 //

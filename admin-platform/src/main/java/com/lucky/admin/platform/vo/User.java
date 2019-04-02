@@ -21,7 +21,7 @@ public class User extends BaseEntity implements UserDetails {
 
 	private String nickname;
 
-	private char sex;
+	private String sex;
 	
 	private String mobile;
 	
@@ -79,11 +79,11 @@ public class User extends BaseEntity implements UserDetails {
 		this.nickname = nickname;
 	}
 
-	public char getSex() {
+	public String getSex() {
 		return sex;
 	}
 
-	public void setSex(char sex) {
+	public void setSex(String sex) {
 		this.sex = sex;
 	}
 

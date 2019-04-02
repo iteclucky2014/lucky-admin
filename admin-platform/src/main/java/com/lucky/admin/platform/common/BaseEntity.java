@@ -13,7 +13,7 @@ public class BaseEntity {
 
     private Timestamp updateTime;
 
-    private char isDelete;
+    private String isDelete;
 
     public int getId() {
         return id;
@@ -39,11 +39,11 @@ public class BaseEntity {
         this.updateTime = updateTime;
     }
 
-    public char getIsDelete() {
+    public String getIsDelete() {
         return isDelete;
     }
 
-    public void setIsDelete(char isDelete) {
+    public void setIsDelete(String isDelete) {
         this.isDelete = isDelete;
     }
 }

@@ -108,16 +108,31 @@ layui.use(['admin', 'form', 'user'], function(){
     
     //请求接口
     admin.req({
-      url: '/lucky/reg' //实际使用请改成服务端真实接口
+      url: '/lucky/user/reg' //实际使用请改成服务端真实接口
       ,type: 'POST'
-      ,data: field
-      ,done: function(res){        
-        layer.msg('注册成功', {
-          offset: '15px'
-          ,icon: 1
+      ,contentType: 'application/json; charset=utf-8'
+      ,data: JSON.stringify({data:field})
+      ,success: function(res) {
+        if (res.code === 0) {
+          //注册成功的提示与跳转
+          layer.msg(res.msg, {
+            offset: '15px'
+            , icon: 1
+            , time: 1000
+          }, function () {
+            location.hash = '/user/login'; //跳转到登录页
+          });
+        } else {
+          layer.msg(res.msg, {
+            icon: 5
+            ,time: 1000
+          });
+        }
+      }
+      ,error: function(res) {
+        layer.msg(res, {
+          icon: 5
           ,time: 1000
-        }, function(){
-          location.hash = '/user/login'; //跳转到登入页
         });
       }
     });
