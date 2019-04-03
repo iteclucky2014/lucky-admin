@@ -51,7 +51,7 @@ function(e) {
                 var n = o.statusCode;
                 if (t[o.statusName] == n.ok)"function" == typeof e.done && e.done(t);
                 else if (t[o.statusName] == n.logout) i.exit();
-                else {
+                else if (t[o.statusName] != n.be) {
                     var r = ["<cite>Error：</cite> " + (t[o.msgName] || "返回状态码异常"), s()].join("");
                     i.error(r)
                 }

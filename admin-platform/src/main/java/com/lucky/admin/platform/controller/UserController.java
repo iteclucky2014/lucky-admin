@@ -41,12 +41,12 @@ public class UserController {
 		}
 		User user = params.getData();
 		if (userService.getUserByUsername(user.getUsername()) != null) {
-			return ApiResultBuilder.create().code(1001).msg("该用户已存在").build();
+			return ApiResultBuilder.create().code(ApiResultCode.BusinessException.code()).msg("该用户已存在！").build();
 		}
 		if (userService.createUser(user) > 0) {
 			return ApiResultBuilder.create().code(ApiResultCode.Success.code()).msg("注册成功").build();
 		} else {
-			return ApiResultBuilder.create().code(1001).msg("注册失败").build();
+			return ApiResultBuilder.create().code(ApiResultCode.BusinessException.code()).msg("注册失败").build();
 		}
 	}
 }

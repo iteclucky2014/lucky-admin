@@ -7,7 +7,8 @@ public enum ApiResultCode {
     DataIllegality(91, "请求数据不合法"),
     DataConflict(92, "数据冲突"),
     DataNotExist(93, "数据不存在"),
-    DataError(94, "数据错误");
+    DataError(94, "数据错误"),
+    BusinessException(9, "业务异常");
 
     /** 业务代码 */
     private int code;
