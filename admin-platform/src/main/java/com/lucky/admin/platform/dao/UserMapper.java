@@ -9,20 +9,6 @@ public interface UserMapper {
 	User getUserByUsername(String username);
 
 	int createUser(User user);
-	
-//	int deleteByPrimaryKey(String id);
-//
-//	int insert(User record);
-//
-//	int insertSelective(User record);
-//
-//	int updateByPrimaryKeySelective(User record);
-//
-//	int updateByPrimaryKey(User record);
-//
-//	List<User> getAll();
-//
-//	List<User> getAll2();
-//
-//	List<User> getAll3();
+
+	int modifyUser(User user);
 }

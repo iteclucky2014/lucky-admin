@@ -74,6 +74,25 @@ function(e) {
         });
         else {
             if (a.interceptor) {
+                d.ajax({
+                  url: '/lucky/getSessionAccessToken'
+                  , type: 'GET'
+                  , async: false
+                  , success: function(res) {
+                    if (res.code !== 0) {
+                      layui.data(a.tableName, {
+                        key: a.request.tokenName
+                        , remove: true
+                      });
+                    }
+                  }
+                  , error: function(res) {
+                    layer.msg(res, {
+                      icon: 5
+                      ,time: 1000
+                    });
+                  }
+                });
                 var u = layui.data(a.tableName);
                 if (!u[a.request.tokenName]) return location.hash = "/user/login/redirect=" + encodeURIComponent(s)
             }

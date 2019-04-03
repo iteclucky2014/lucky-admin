@@ -108,7 +108,7 @@ layui.use(['admin', 'form', 'user'], function(){
             , icon: 1
             , time: 1000
           }, function () {
-            location.hash = search.redirect ? decodeURIComponent(search.redirect) : '/';
+            location.hash = '/';
           });
         } else {
           layer.msg(res.msg, {
