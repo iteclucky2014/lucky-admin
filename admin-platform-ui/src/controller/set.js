@@ -59,8 +59,36 @@ function(t) {
     },
     a.on("submit(setmypass)",
     function(t) {
-        return e.msg(JSON.stringify(t.field)),
-        !1
+        //请求接口
+        layui.admin.req({
+          url: '/lucky/user/chgPwd?access_token=' + layui.data(layui.setter.tableName)["access_token"]
+          ,type: 'POST'
+          ,contentType: 'application/json; charset=utf-8'
+          ,data: JSON.stringify({data:t.field})
+          ,success: function(res) {
+            if (res.code === 0) {
+              //修改成功的提示与跳转
+              layer.msg(res.msg, {
+                offset: '15px'
+                , icon: 1
+                , time: 1000
+              }, function () {
+                location.hash = '/'; //跳转到登录页
+              });
+            } else {
+              layer.msg(res.msg, {
+                icon: 5
+                ,time: 1000
+              });
+            }
+          }
+          ,error: function(res) {
+            layer.msg(res, {
+              icon: 5
+              ,time: 1000
+            });
+          }
+        });
     }),
     t("set", {})
 });
