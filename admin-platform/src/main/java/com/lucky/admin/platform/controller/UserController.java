@@ -94,7 +94,7 @@ public class UserController {
 			return ApiResultBuilder.create().code(ApiResultCode.BusinessException.code()).msg("该用户不存在！").build();
 		}
 		BCryptPasswordEncoder encoder =new BCryptPasswordEncoder();
-		if (!encoder.matches(user.getPassword(), chkUser.getPassword())) {
+		if (!encoder.matches(user.getOldPassword(), chkUser.getPassword())) {
 			return ApiResultBuilder.create().code(ApiResultCode.BusinessException.code()).msg("原密码错误！").build();
 		}
 		user.setPassword(encoder.encode(user.getPassword().trim()));

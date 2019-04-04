@@ -61,21 +61,28 @@ function(t) {
     function(t) {
         //请求接口
         layui.admin.req({
-          url: '/lucky/user/chgPwd?access_token=' + layui.data(layui.setter.tableName)["access_token"]
+          url: '/lucky/user/chgPwd?access_token=' + layui.data(layui.setter.tableName)[layui.setter.request.tokenName]
           ,type: 'POST'
           ,contentType: 'application/json; charset=utf-8'
-          ,data: JSON.stringify({data:t.field})
+          ,data: JSON.stringify({
+              data: {
+                  id: layui.data(layui.setter.tableName)['id'],
+                  username: layui.data(layui.setter.tableName)['username'],
+                  password: t.field.password,
+                  oldPassword: t.field.oldPassword
+              }
+          })
           ,success: function(res) {
-            if (res.code === 0) {
+            if (res.code === layui.setter.response.statusCode.ok) {
               //修改成功的提示与跳转
               layer.msg(res.msg, {
                 offset: '15px'
                 , icon: 1
                 , time: 1000
               }, function () {
-                location.hash = '/'; //跳转到登录页
+                location.hash = '/';
               });
-            } else {
+            } else if (res.code !== layui.setter.response.statusCode.logout) {
               layer.msg(res.msg, {
                 icon: 5
                 ,time: 1000

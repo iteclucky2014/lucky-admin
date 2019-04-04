@@ -95,11 +95,22 @@ layui.use(['admin', 'form', 'user'], function(){
       ,type: 'POST'
       ,data: obj.field
       ,success: function(res) {
-        if (res.code === 0) {
+        if (res.code === setter.response.statusCode.ok) {
           //请求成功后，写入 access_token
           layui.data(setter.tableName, {
             key: setter.request.tokenName
             , value: res.data.access_token
+          });
+          $.getJSON('/lucky/user/getSessionUserInfo?access_token=' + layui.data(setter.tableName)[setter.request.tokenName], function(res) {
+            var userInfo = res.data || {};
+            layui.data(setter.tableName, {
+              key: 'id'
+              , value: userInfo.id
+            });
+            layui.data(setter.tableName, {
+              key: 'username'
+              , value: userInfo.username
+            });
           });
 
           //登入成功的提示与跳转

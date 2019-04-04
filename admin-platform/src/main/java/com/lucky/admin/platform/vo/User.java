@@ -30,6 +30,8 @@ public class User extends BaseEntity implements UserDetails {
 	private String description;
 	
 	private int roleId;
+	
+	private String oldPassword;
 
 	private Set<Role> authorities = new HashSet<>();
 	
@@ -117,6 +119,14 @@ public class User extends BaseEntity implements UserDetails {
 
 	public void setRoleId(int roleId) {
 		this.roleId = roleId;
+	}
+
+	public String getOldPassword() {
+		return oldPassword;
+	}
+
+	public void setOldPassword(String oldPassword) {
+		this.oldPassword = oldPassword;
 	}
 
 	@Override

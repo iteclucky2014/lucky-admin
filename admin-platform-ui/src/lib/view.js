@@ -26,6 +26,14 @@ function(e) {
             key: r.request.tokenName,
             remove: !0
         }),
+            layui.data(r.tableName, {
+                key: 'id',
+                remove: !0
+            }),
+            layui.data(r.tableName, {
+                key: 'username',
+                remove: !0
+            }),
         location.hash = "/user/login"
     },
     i.req = function(e) {

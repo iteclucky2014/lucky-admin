@@ -113,7 +113,7 @@ layui.use(['admin', 'form', 'user'], function(){
       ,contentType: 'application/json; charset=utf-8'
       ,data: JSON.stringify({data:field})
       ,success: function(res) {
-        if (res.code === 0) {
+        if (res.code === setter.response.statusCode.ok) {
           //注册成功的提示与跳转
           layer.msg(res.msg, {
             offset: '15px'

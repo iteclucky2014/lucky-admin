@@ -84,6 +84,14 @@ function(e) {
                         key: a.request.tokenName
                         , remove: true
                       });
+                        layui.data(a.tableName, {
+                            key: 'id'
+                            , remove: true
+                        });
+                        layui.data(a.tableName, {
+                            key: 'username'
+                            , remove: true
+                        });
                     }
                   }
                   , error: function(res) {
