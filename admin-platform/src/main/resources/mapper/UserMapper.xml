@@ -13,6 +13,7 @@
 		<result column="EMAIL" property="email" jdbcType="VARCHAR" />
 		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
 		<result column="ROLE_ID" property="roleId" jdbcType="INTEGER" />
+		<result column="ROLE_NAME" property="roleName" jdbcType="VARCHAR" />
 		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
 		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
 		<result column="IS_DELETE" property="isDelete" jdbcType="CHAR" />
@@ -24,10 +25,10 @@
 	
 	<select id="getUserByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
 		select
-		<include refid="Base_Column_List" />
-		from tuser
+		tuser.ID, USERNAME, PASSWORD, AVATAR, NICKNAME, SEX, MOBILE, EMAIL, DESCRIPTION, ROLE_ID, ROLE_NAME
+		from tuser left join trole on tuser.ROLE_ID = trole.ID
 		where USERNAME = #{username,jdbcType=VARCHAR}
-		and IS_DELETE = '0'
+		and tuser.IS_DELETE = '0' and trole.IS_DELETE = '0'
 	</select>
 	
 	<insert id="createUser" parameterType="com.lucky.admin.platform.vo.User">

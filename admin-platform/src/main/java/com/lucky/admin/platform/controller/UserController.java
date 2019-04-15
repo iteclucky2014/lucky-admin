@@ -53,11 +53,11 @@ public class UserController {
 
 	@RequestMapping("/get")
 	@ResponseBody
-	public ApiResult getUser(@RequestBody ApiParams<String> params) {
+	public ApiResult getUser(@RequestBody ApiParams<User> params) {
 		if (params.getData() == null) {
 			return ApiResultBuilder.create().code(ApiResultCode.DataIllegality.code()).msg(ApiResultCode.DataIllegality.msg()).build();
 		}
-		User user = userService.getUserByUsername(params.getData());
+		User user = userService.getUserByUsername(params.getData().getUsername());
 		if (user == null) {
 			return ApiResultBuilder.create().code(ApiResultCode.BusinessException.code()).msg("该用户不存在！").build();
 		} else {

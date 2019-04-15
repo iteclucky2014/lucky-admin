@@ -275,7 +275,7 @@
     }, {
       "name": ""
       ,"title": "内嵌页面"
-      ,"spread": true
+      ,"spread": false
       ,"list": [{
         "name": ""
         ,"title": "百度一下"
@@ -370,7 +370,7 @@
     ,"list": [{
       "name": "system"
       ,"title": "系统设置"
-      ,"spread": true
+      ,"spread": false
       ,"list": [{
         "name": "website"
         ,"title": "网站设置"
@@ -381,7 +381,7 @@
     },{
       "name": "user"
       ,"title": "我的设置"
-      ,"spread": true
+      ,"spread": false
       ,"list": [{
         "name": "info"
         ,"title": "基本资料"

@@ -29,7 +29,9 @@ public class User extends BaseEntity implements UserDetails {
 
 	private String description;
 	
-	private int roleId;
+	private Integer roleId;
+
+	private String roleName;
 	
 	private String oldPassword;
 
@@ -113,12 +115,20 @@ public class User extends BaseEntity implements UserDetails {
 		this.description = description;
 	}
 
-	public int getRoleId() {
+	public Integer getRoleId() {
 		return roleId;
 	}
 
-	public void setRoleId(int roleId) {
+	public void setRoleId(Integer roleId) {
 		this.roleId = roleId;
+	}
+
+	public String getRoleName() {
+		return roleName;
+	}
+
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
 	}
 
 	public String getOldPassword() {

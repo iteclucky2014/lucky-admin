@@ -30,8 +30,46 @@ function(t) {
     }),
     a.on("submit(setmyinfo)",
     function(t) {
-        return e.msg(JSON.stringify(t.field)),
-        !1
+        //请求接口
+        layui.admin.req({
+          url: '/lucky/user/chg?access_token=' + layui.data(layui.setter.tableName)[layui.setter.request.tokenName]
+          ,type: 'POST'
+          ,contentType: 'application/json; charset=utf-8'
+          ,data: JSON.stringify({
+              data: {
+                  id: layui.data(layui.setter.tableName)['id'],
+                  username: layui.data(layui.setter.tableName)['username'],
+                  nickname: t.field.nickname,
+                  sex: i('input[name="sex"]:checked').val(),
+                  mobile: t.field.cellphone,
+                  email: t.field.email,
+                  description: t.field.remarks
+              }
+          })
+          ,success: function(res) {
+            if (res.code === layui.setter.response.statusCode.ok) {
+              //修改成功的提示与跳转
+              layer.msg(res.msg, {
+                offset: '15px'
+                , icon: 1
+                , time: 1000
+              }, function () {
+                location.hash = '/';
+              });
+            } else if (res.code !== layui.setter.response.statusCode.logout) {
+              layer.msg(res.msg, {
+                icon: 5
+                ,time: 1000
+              });
+            }
+          }
+          ,error: function(res) {
+            layer.msg(res, {
+              icon: 5
+              ,time: 1000
+            });
+          }
+        });
     });
     var r = i("#LAY_avatarSrc");
     s.render({
