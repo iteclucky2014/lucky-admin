@@ -352,22 +352,33 @@
     ,"icon": "layui-icon-user"
     ,"list": [{
       "name": "user"
-      ,"title": "网站用户"
+      ,"title": "用户管理"
       ,"jump": "user/user/list"
     }, {
-      "name": "administrators-list"
-      ,"title": "后台管理员"
-      ,"jump": "user/administrators/list"
-    }, {
-      "name": "administrators-rule"
+      "name": "administrators-role"
       ,"title": "角色管理"
       ,"jump": "user/administrators/role"
+    }, {
+      "name": "administrators-menu"
+      ,"title": "菜单管理"
+      ,"jump": "user/administrators/list"
     }]
   }, {
     "name": "set"
     ,"title": "设置"
     ,"icon": "layui-icon-set"
     ,"list": [{
+      "name": "user"
+      ,"title": "基本设置"
+      ,"spread": false
+      ,"list": [{
+        "name": "info"
+        ,"title": "编辑资料"
+      },{
+        "name": "password"
+        ,"title": "修改密码"
+      }]
+    },{
       "name": "system"
       ,"title": "系统设置"
       ,"spread": false
@@ -377,17 +388,6 @@
       },{
         "name": "email"
         ,"title": "邮件服务"
-      }]
-    },{
-      "name": "user"
-      ,"title": "我的设置"
-      ,"spread": false
-      ,"list": [{
-        "name": "info"
-        ,"title": "基本资料"
-      },{
-        "name": "password"
-        ,"title": "修改密码"
       }]
     }]
   }, {
