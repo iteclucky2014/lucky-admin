@@ -5,7 +5,7 @@ public class ApiPagination {
     /** 当前页码 */
     private Long page = 1L;
     /** 一页表示件数 */
-    private Long limit = 10L;
+    private Long limit = 50L;
     /** 总件数 */
     private Long count = 0L;
 

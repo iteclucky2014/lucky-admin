@@ -6,45 +6,120 @@
 		<id column="ID" property="id" jdbcType="INTEGER" />
 		<result column="USERNAME" property="username" jdbcType="VARCHAR" />
 		<result column="PASSWORD" property="password" jdbcType="VARCHAR" />
-		<result column="AVATAR" property="avatar" jdbcType="VARCHAR" />
 		<result column="NICKNAME" property="nickname" jdbcType="VARCHAR" />
+		<result column="AVATAR" property="avatar" jdbcType="LONGVARCHAR" />
 		<result column="SEX" property="sex" jdbcType="CHAR" />
 		<result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
 		<result column="EMAIL" property="email" jdbcType="VARCHAR" />
 		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
 		<result column="ROLE_ID" property="roleId" jdbcType="INTEGER" />
 		<result column="ROLE_NAME" property="roleName" jdbcType="VARCHAR" />
+		<result column="ROLE_DESC" property="roleDesc" jdbcType="VARCHAR" />
 		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
 		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
 		<result column="IS_DELETE" property="isDelete" jdbcType="CHAR" />
 	</resultMap>
 	
 	<sql id="Base_Column_List">
-		ID, USERNAME, PASSWORD, AVATAR, NICKNAME, SEX, MOBILE, EMAIL, DESCRIPTION, ROLE_ID, CREATE_TIME, UPDATE_TIME, IS_DELETE
+		ID, ROLE_ID, USERNAME, PASSWORD, NICKNAME, AVATAR, SEX, MOBILE, EMAIL, DESCRIPTION, CREATE_TIME, UPDATE_TIME, IS_DELETE
 	</sql>
 	
 	<select id="getUserByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
 		select
-		tuser.ID, USERNAME, PASSWORD, AVATAR, NICKNAME, SEX, MOBILE, EMAIL, DESCRIPTION, ROLE_ID, ROLE_NAME
-		from tuser left join trole on tuser.ROLE_ID = trole.ID
+		tuser.ID, USERNAME, PASSWORD, NICKNAME, AVATAR, SEX, MOBILE, EMAIL, DESCRIPTION, ROLE_ID, ROLE_NAME
+		from tuser left join trole on tuser.ROLE_ID = trole.ID and trole.IS_DELETE = '0'
 		where USERNAME = #{username,jdbcType=VARCHAR}
-		and tuser.IS_DELETE = '0' and trole.IS_DELETE = '0'
+		and tuser.IS_DELETE = '0'
+	</select>
+	
+	<select id="getUserByCondition" parameterType="com.lucky.admin.platform.vo.User" resultMap="BaseResultMap">
+		select
+		tuser.ID, USERNAME, PASSWORD, NICKNAME, AVATAR, SEX, MOBILE, EMAIL, DESCRIPTION, ROLE_ID, ROLE_NAME, date_format(tuser.CREATE_TIME, '%Y-%m-%d') as CREATE_TIME, tuser.IS_DELETE
+		from tuser left join trole on tuser.ROLE_ID = trole.ID and trole.IS_DELETE = '0'
+		<where>
+			tuser.ID > 1
+			<if test="username != null and username != ''">
+				and USERNAME = #{username,jdbcType=VARCHAR}
+			</if>
+			<if test="nickname != null and nickname != ''">
+				and NICKNAME like concat('%', #{nickname,jdbcType=VARCHAR}, '%')
+			</if>
+			<if test="sex != null and sex != ''">
+				and SEX = #{sex,jdbcType=CHAR}
+			</if>
+			<if test="mobile != null and mobile != ''">
+				and MOBILE = #{mobile,jdbcType=VARCHAR}
+			</if>
+			<if test="email != null and email != ''">
+				and EMAIL like concat('%', #{email,jdbcType=VARCHAR}, '%')
+			</if>
+			<if test="createTimeFrom != null and createTimeFrom != ''">
+				and date_format(tuser.CREATE_TIME, '%Y-%m-%d') >= #{createTimeFrom,jdbcType=VARCHAR}
+			</if>
+			<if test="createTimeTo != null and createTimeTo != ''">
+				and #{createTimeTo,jdbcType=VARCHAR} >= date_format(tuser.CREATE_TIME, '%Y-%m-%d')
+			</if>
+			<if test="isDelete != null and isDelete != ''">
+				and tuser.IS_DELETE = #{isDelete,jdbcType=CHAR}
+			</if>
+		</where>
+		order by tuser.UPDATE_TIME desc
+		limit #{offset}, #{limit}
+	</select>
+
+	<select id="getUserCountByCondition" parameterType="com.lucky.admin.platform.vo.User" resultType="java.lang.Long">
+		select count(*) from
+		(
+		select
+		tuser.ID, USERNAME, PASSWORD, NICKNAME, AVATAR, SEX, MOBILE, EMAIL, DESCRIPTION, ROLE_ID, ROLE_NAME, date_format(tuser.CREATE_TIME, '%Y-%m-%d') as CREATE_TIME, tuser.IS_DELETE
+		from tuser left join trole on tuser.ROLE_ID = trole.ID and trole.IS_DELETE = '0'
+		<where>
+			tuser.ID > 1
+			<if test="username != null and username != ''">
+				and USERNAME = #{username,jdbcType=VARCHAR}
+			</if>
+			<if test="nickname != null and nickname != ''">
+				and NICKNAME like concat('%', #{nickname,jdbcType=VARCHAR}, '%')
+			</if>
+			<if test="sex != null and sex != ''">
+				and SEX = #{sex,jdbcType=CHAR}
+			</if>
+			<if test="mobile != null and mobile != ''">
+				and MOBILE = #{mobile,jdbcType=VARCHAR}
+			</if>
+			<if test="email != null and email != ''">
+				and EMAIL like concat('%', #{email,jdbcType=VARCHAR}, '%')
+			</if>
+			<if test="createTimeFrom != null and createTimeFrom != ''">
+				and date_format(tuser.CREATE_TIME, '%Y-%m-%d') >= #{createTimeFrom,jdbcType=VARCHAR}
+			</if>
+			<if test="createTimeTo != null and createTimeTo != ''">
+				and #{createTimeTo,jdbcType=VARCHAR} >= date_format(tuser.CREATE_TIME, '%Y-%m-%d')
+			</if>
+			<if test="isDelete != null and isDelete != ''">
+				and tuser.IS_DELETE = #{isDelete,jdbcType=CHAR}
+			</if>
+		</where>
+		) USERS
 	</select>
 	
 	<insert id="createUser" parameterType="com.lucky.admin.platform.vo.User">
 		insert into tuser
 		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="roleId != null">
+				ROLE_ID,
+			</if>
 			<if test="username != null">
 				USERNAME,
 			</if>
 			<if test="password != null">
 				PASSWORD,
 			</if>
-			<if test="avatar != null">
-				AVATAR,
-			</if>
 			<if test="nickname != null">
 				NICKNAME,
+			</if>
+			<if test="avatar != null">
+				AVATAR,
 			</if>
 			<if test="sex != null">
 				SEX,
@@ -58,22 +133,22 @@
 			<if test="description != null">
 				DESCRIPTION,
 			</if>
-			<if test="roleId != null">
-				ROLE_ID,
-			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="roleId != null">
+				#{roleId,jdbcType=INTEGER},
+			</if>
 			<if test="username != null">
 				#{username,jdbcType=VARCHAR},
 			</if>
 			<if test="password != null">
 				#{password,jdbcType=VARCHAR},
 			</if>
-			<if test="avatar != null">
-				#{avatar,jdbcType=VARCHAR},
-			</if>
 			<if test="nickname != null">
 				#{nickname,jdbcType=VARCHAR},
+			</if>
+			<if test="avatar != null">
+				#{avatar,jdbcType=LONGVARCHAR},
 			</if>
 			<if test="sex != null">
 				#{sex,jdbcType=CHAR},
@@ -87,26 +162,26 @@
 			<if test="description != null">
 				#{description,jdbcType=VARCHAR},
 			</if>
-			<if test="roleId != null">
-				#{roleId,jdbcType=INTEGER},
-			</if>
 		</trim>
 	</insert>
 
 	<update id="modifyUser" parameterType="com.lucky.admin.platform.vo.User">
 		update tuser
 		<set>
+			<if test="roleId != null">
+				ROLE_ID = #{roleId,jdbcType=INTEGER},
+			</if>
 			<if test="username != null">
 				USERNAME = #{username,jdbcType=VARCHAR},
 			</if>
 			<if test="password != null">
 				PASSWORD = #{password,jdbcType=VARCHAR},
 			</if>
-			<if test="avatar != null">
-				AVATAR = #{avatar,jdbcType=VARCHAR},
-			</if>
 			<if test="nickname != null">
 				NICKNAME = #{nickname,jdbcType=VARCHAR},
+			</if>
+			<if test="avatar != null">
+				AVATAR = #{avatar,jdbcType=LONGVARCHAR},
 			</if>
 			<if test="sex != null">
 				SEX = #{sex,jdbcType=CHAR},
@@ -120,13 +195,44 @@
 			<if test="description != null">
 				DESCRIPTION = #{description,jdbcType=VARCHAR},
 			</if>
-			<if test="roleId != null">
-				ROLE_ID = #{roleId,jdbcType=INTEGER},
-			</if>
 			<if test="isDelete != null">
 				IS_DELETE = #{isDelete,jdbcType=CHAR},
 			</if>
 		</set>
+		where ID = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="batchDel" parameterType="java.util.List">
+		update tuser
+		set
+			IS_DELETE = '1'
+		where
+			ID in
+		<foreach collection="list" item="bean" index="index" open="(" close=")" separator=",">
+			#{bean.id,jdbcType=INTEGER}
+		</foreach>
+	</update>
+
+	<select id="getRoles" parameterType="com.lucky.admin.platform.vo.User" resultMap="BaseResultMap">
+		select
+		ID, ROLE_NAME, ROLE_DESC
+		from trole where ID > 1 and IS_DELETE = '0'
+		order by UPDATE_TIME desc
+		limit #{offset}, #{limit}
+	</select>
+
+	<select id="getRolesCount" parameterType="com.lucky.admin.platform.vo.User" resultType="java.lang.Long">
+		select count(*) from
+		(
+		select
+		ID, ROLE_NAME, ROLE_DESC
+		from trole where ID > 1 and IS_DELETE = '0'
+		) ROLES
+	</select>
+
+	<update id="disRole" parameterType="com.lucky.admin.platform.vo.User">
+		update tuser
+		set ROLE_ID = #{roleId,jdbcType=INTEGER}
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
 

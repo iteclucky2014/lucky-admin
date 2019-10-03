@@ -15,30 +15,58 @@
     <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="layadmin-userfront-formlist">
       <div class="layui-form-item">
         <div class="layui-inline">
-          <label class="layui-form-label">ID</label>
-          <div class="layui-input-block">
-            <input type="text" name="id" placeholder="请输入" autocomplete="off" class="layui-input">
-          </div>
-        </div>
-        <div class="layui-inline">
           <label class="layui-form-label">用户名</label>
           <div class="layui-input-block">
             <input type="text" name="username" placeholder="请输入" autocomplete="off" class="layui-input">
           </div>
         </div>
         <div class="layui-inline">
-          <label class="layui-form-label">邮箱</label>
+          <label class="layui-form-label">昵称</label>
           <div class="layui-input-block">
-            <input type="text" name="email" placeholder="请输入" autocomplete="off" class="layui-input">
+            <input type="text" name="nickname" placeholder="请输入" autocomplete="off" class="layui-input">
           </div>
         </div>
         <div class="layui-inline">
           <label class="layui-form-label">性别</label>
           <div class="layui-input-block">
             <select name="sex">
-              <option value="0">不限</option>
+              <option value="">不限</option>
               <option value="1">男</option>
               <option value="2">女</option>
+            </select>
+          </div>
+        </div>
+        <div class="layui-inline">
+          <label class="layui-form-label">手机</label>
+          <div class="layui-input-block">
+            <input type="text" name="mobile" placeholder="请输入" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+        <div class="layui-inline">
+          <label class="layui-form-label">邮箱</label>
+          <div class="layui-input-block">
+            <input type="text" name="email" placeholder="请输入" autocomplete="off" class="layui-input" size="32">
+          </div>
+        </div>
+        <div class="layui-inline">
+          <label class="layui-form-label">注册时间</label>
+          <div class="layui-input-inline">
+            <input type="text" id="createTimeFrom" name="createTimeFrom" placeholder="请选择" autocomplete="off" class="layui-input" readonly>
+          </div>
+          <div class="layui-form-mid">
+            -
+          </div>
+          <div class="layui-input-inline">
+            <input type="text" id="createTimeTo" name="createTimeTo" placeholder="请选择" autocomplete="off" class="layui-input" readonly>
+          </div>
+        </div>
+        <div class="layui-inline">
+          <label class="layui-form-label">状态</label>
+          <div class="layui-input-block">
+            <select name="isDelete">
+              <option value="">全部</option>
+              <option value="0">正常</option>
+              <option value="1">已删除</option>
             </select>
           </div>
         </div>
@@ -52,29 +80,49 @@
     
     <div class="layui-card-body">
       <div style="padding-bottom: 10px;">
-        <button class="layui-btn layuiadmin-btn-useradmin" data-type="batchdel">删除</button>
-        <button class="layui-btn layuiadmin-btn-useradmin" data-type="add">添加</button>
+        <button class="layui-btn layui-btn-danger layuiadmin-btn-useradmin" data-type="batchdel">删除</button>
+        <!--<button class="layui-btn layuiadmin-btn-useradmin" data-type="add">添加</button>-->
       </div>
       
       <table id="LAY-user-manage" lay-filter="LAY-user-manage"></table>
+      <input type="hidden" id="roleId">
+      <script type="text/html" id="sex">
+        {{#  if (d.sex == '1') { }}
+        男
+        {{#  } else if (d.sex == '2') { }}
+        女
+        {{#  } else { }}
+        {{#  } }}
+      </script>
+      <script type="text/html" id="isDelete">
+        {{#  if (d.isDelete == '0') { }}
+        <button class="layui-btn layui-btn-xs">正常</button>
+        {{#  } else if (d.isDelete == '1') { }}
+        <button class="layui-btn layui-btn-primary layui-btn-xs">已删除</button>
+        {{#  } else { }}
+        {{#  } }}
+      </script>
       <script type="text/html" id="imgTpl"> 
         <img style="display: inline-block; width: 50%; height: 100%;" src= {{ d.avatar }}>
       </script> 
       <script type="text/html" id="table-useradmin-webuser">
-        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+        {{#  if (d.isDelete == '0') { }}
+        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>分配角色</a>
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
+        {{#  } }}
       </script>
     </div>
   </div>
 </div>
 
 <script>
-layui.use('useradmin', layui.factory('useradmin')).use(['admin', 'useradmin', 'table'], function(){
+layui.use('useradmin', layui.factory('useradmin')).use(['admin', 'useradmin', 'table', 'laydate'], function(){
   var $ = layui.$
   ,admin = layui.admin
   ,view = layui.view
   ,table = layui.table
-  ,form = layui.form;
+  ,form = layui.form
+  ,laydate = layui.laydate;
   
   form.render(null, 'layadmin-userfront-formlist');
   
@@ -95,28 +143,69 @@ layui.use('useradmin', layui.factory('useradmin')).use(['admin', 'useradmin', 't
       ,checkData = checkStatus.data; //得到选中的数据
 
       if(checkData.length === 0){
-        return layer.msg('请选择数据');
+        return layer.msg('请选择用户', {
+          icon: 5
+          ,time: 1000
+        });
       }
       
-      layer.prompt({
-        formType: 1
-        ,title: '敏感操作，请验证口令'
-      }, function(value, index){
-        layer.close(index);
+      var users = [];
+      for (var i = 0; i < checkData.length; i++) {
+        if (checkData[i].isDelete == "1") {
+          return layer.msg('请选择正常用户', {
+            icon: 5
+            ,time: 2000
+          });
+        }
+        var tuser = {
+          id: checkData[i].id
+        }
+        users.push(tuser);
+      }
+      
+//      layer.prompt({
+//        formType: 1
+//        ,title: '敏感操作，请验证口令'
+//      }, function(value, index){
+//        layer.close(index);
         
         layer.confirm('确定删除吗？', function(index) {
+          layer.close(index);
           
           //执行 Ajax 后重载
-          /*
-          admin.req({
-            url: 'xxx'
-            //,……
+          layui.admin.req({
+            url: '/lucky/user/batchDel?access_token=' + layui.data(layui.setter.tableName)[layui.setter.request.tokenName]
+            ,type: 'POST'
+            ,contentType: 'application/json; charset=utf-8'
+            ,data: JSON.stringify({
+              data: users
+            })
+            ,success: function(res) {
+              if (res.code === layui.setter.response.statusCode.ok) {
+                //修改成功的提示与跳转
+                layer.msg(res.msg, {
+                  offset: '15px'
+                  , icon: 1
+                  , time: 1000
+                }, function () {
+                  table.reload('LAY-user-manage');
+                });
+              } else if (res.code !== layui.setter.response.statusCode.logout) {
+                layer.msg(res.msg, {
+                  icon: 5
+                  ,time: 1000
+                });
+              }
+            }
+            ,error: function(res) {
+              layer.msg(res, {
+                icon: 5
+                ,time: 1000
+              });
+            }
           });
-          */
-          table.reload('LAY-user-manage');
-          layer.msg('已删除');
         });
-      });
+//      });
     }
     ,add: function(){
       admin.popup({
@@ -145,6 +234,33 @@ layui.use('useradmin', layui.factory('useradmin')).use(['admin', 'useradmin', 't
   $('.layui-btn.layuiadmin-btn-useradmin').on('click', function(){
     var type = $(this).data('type');
     active[type] ? active[type].call(this) : '';
+  });
+
+  //开始日期
+  var insStart = laydate.render({
+    elem: '#createTimeFrom'
+    ,btns: ['clear']
+//    ,done: function(value, date){
+//      //更新结束日期的最小日期
+//      insEnd.config.min = lay.extend({}, date, {
+//        month: date.month - 1
+//      });
+//
+//      //自动弹出结束日期的选择器
+//      insEnd.config.elem[0].focus();
+//    }
+  });
+
+  //结束日期
+  var insEnd = laydate.render({
+    elem: '#createTimeTo'
+    ,btns: ['clear']
+//    ,done: function(value, date){
+//      //更新开始日期的最大日期
+//      insStart.config.max = lay.extend({}, date, {
+//        month: date.month - 1
+//      });
+//    }
   });
 });
 </script>

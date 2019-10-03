@@ -17,9 +17,9 @@ public class User extends BaseEntity implements UserDetails {
 
 	private String password;
 
-	private String avatar;
-
 	private String nickname;
+
+	private String avatar;
 
 	private String sex;
 	
@@ -29,11 +29,17 @@ public class User extends BaseEntity implements UserDetails {
 
 	private String description;
 	
-	private Integer roleId;
+	private int roleId;
 
 	private String roleName;
 	
+	private String roleDesc;
+	
 	private String oldPassword;
+	
+	private String createTimeFrom;
+	
+	private String createTimeTo;
 
 	private Set<Role> authorities = new HashSet<>();
 	
@@ -67,20 +73,20 @@ public class User extends BaseEntity implements UserDetails {
 		this.password = password;
 	}
 
-	public String getAvatar() {
-		return avatar;
-	}
-
-	public void setAvatar(String avatar) {
-		this.avatar = avatar;
-	}
-
 	public String getNickname() {
 		return nickname;
 	}
 
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
+	}
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
 	}
 
 	public String getSex() {
@@ -115,11 +121,11 @@ public class User extends BaseEntity implements UserDetails {
 		this.description = description;
 	}
 
-	public Integer getRoleId() {
+	public int getRoleId() {
 		return roleId;
 	}
 
-	public void setRoleId(Integer roleId) {
+	public void setRoleId(int roleId) {
 		this.roleId = roleId;
 	}
 
@@ -131,12 +137,36 @@ public class User extends BaseEntity implements UserDetails {
 		this.roleName = roleName;
 	}
 
+	public String getRoleDesc() {
+		return roleDesc;
+	}
+
+	public void setRoleDesc(String roleDesc) {
+		this.roleDesc = roleDesc;
+	}
+
 	public String getOldPassword() {
 		return oldPassword;
 	}
 
 	public void setOldPassword(String oldPassword) {
 		this.oldPassword = oldPassword;
+	}
+
+	public String getCreateTimeFrom() {
+		return createTimeFrom;
+	}
+
+	public void setCreateTimeFrom(String createTimeFrom) {
+		this.createTimeFrom = createTimeFrom;
+	}
+
+	public String getCreateTimeTo() {
+		return createTimeTo;
+	}
+
+	public void setCreateTimeTo(String createTimeTo) {
+		this.createTimeTo = createTimeTo;
 	}
 
 	@Override

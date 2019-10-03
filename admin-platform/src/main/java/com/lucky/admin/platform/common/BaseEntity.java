@@ -9,11 +9,17 @@ public class BaseEntity {
 
     private int id;
 
-    private Timestamp createTime;
+    private String createTime;
 
-    private Timestamp updateTime;
+    private String updateTime;
 
     private String isDelete;
+    
+    private Long page;
+    
+    private Long limit;
+    
+    private Long offset;
 
     public int getId() {
         return id;
@@ -23,19 +29,19 @@ public class BaseEntity {
         this.id = id;
     }
 
-    public Timestamp getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Timestamp createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
-    public Timestamp getUpdateTime() {
+    public String getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Timestamp updateTime) {
+    public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
     }
 
@@ -45,5 +51,29 @@ public class BaseEntity {
 
     public void setIsDelete(String isDelete) {
         this.isDelete = isDelete;
+    }
+
+    public Long getPage() {
+        return page;
+    }
+
+    public void setPage(Long page) {
+        this.page = page;
+    }
+
+    public Long getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Long limit) {
+        this.limit = limit;
+    }
+
+    public Long getOffset() {
+        return offset;
+    }
+
+    public void setOffset(Long offset) {
+        this.offset = offset;
     }
 }

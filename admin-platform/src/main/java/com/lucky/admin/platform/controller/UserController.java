@@ -1,19 +1,15 @@
 package com.lucky.admin.platform.controller;
 
-import com.lucky.admin.platform.common.ApiParams;
-import com.lucky.admin.platform.common.ApiResult;
-import com.lucky.admin.platform.common.ApiResultBuilder;
-import com.lucky.admin.platform.common.ApiResultCode;
+import com.lucky.admin.platform.common.*;
 import com.lucky.admin.platform.service.UserService;
 import com.lucky.admin.platform.vo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -65,6 +61,37 @@ public class UserController {
 		}
 	}
 
+	@RequestMapping("/getUsers")
+	@ResponseBody
+	public ApiResult getUserByCondition(@RequestParam(required = false) Long page, @RequestParam(required = false) Long limit,
+	                                    @RequestParam(required = false) String username, @RequestParam(required = false) String nickname,
+                                        @RequestParam(required = false) String sex, @RequestParam(required = false) String mobile,
+                                        @RequestParam(required = false) String email, @RequestParam(required = false) String createTimeFrom,
+                                        @RequestParam(required = false) String createTimeTo, @RequestParam(required = false) String isDelete) {
+		if (page == null || page.longValue() == 0L || limit == null || limit.longValue() == 0L) {
+			return ApiResultBuilder.create().code(ApiResultCode.DataIllegality.code()).msg(ApiResultCode.DataIllegality.msg()).build();
+		}
+		User user = new User();
+        user.setPage(page);
+        user.setLimit(limit);
+        user.setUsername(username);
+        user.setNickname(nickname);
+        user.setSex(sex);
+        user.setMobile(mobile);
+        user.setEmail(email);
+        user.setCreateTimeFrom(createTimeFrom);
+        user.setCreateTimeTo(createTimeTo);
+        user.setIsDelete(isDelete);
+		Long count = userService.getUserCountByCondition(user);
+//		if (count == null || count.longValue() == 0L) {
+//			return ApiResultBuilder.create().code(ApiResultCode.BusinessException.code()).msg("数据不存在！").build();
+//		}
+		ApiPagination pagination = new ApiPagination(page, limit, count);
+		user.setOffset(pagination.getOffset());
+		List<User> users = userService.getUserByCondition(user);
+		return ApiResultBuilder.create().code(ApiResultCode.Success.code()).data(users).pagination(pagination).build();
+	}
+
 	@RequestMapping("/chg")
 	@ResponseBody
 	public ApiResult chgUser(@RequestBody ApiParams<User> params) {
@@ -102,6 +129,48 @@ public class UserController {
 			return ApiResultBuilder.create().code(ApiResultCode.Success.code()).msg("修改成功").build();
 		} else {
 			return ApiResultBuilder.create().code(ApiResultCode.BusinessException.code()).msg("修改失败").build();
+		}
+	}
+
+	@RequestMapping("/batchDel")
+	@ResponseBody
+	public ApiResult batchDel(@RequestBody ApiParams<List<User>> params) {
+		if (params.getData() == null) {
+			return ApiResultBuilder.create().code(ApiResultCode.DataIllegality.code()).msg(ApiResultCode.DataIllegality.msg()).build();
+		}
+		if (params.getData().size() == userService.batchDel(params.getData())) {
+			return ApiResultBuilder.create().code(ApiResultCode.Success.code()).msg("删除成功").build();
+		} else {
+			return ApiResultBuilder.create().code(ApiResultCode.BusinessException.code()).msg("删除失败").build();
+		}
+	}
+
+	@RequestMapping("/getRoles")
+	@ResponseBody
+	public ApiResult getRoles(@RequestParam(required = false) Long page, @RequestParam(required = false) Long limit) {
+		if (page == null || page.longValue() == 0L || limit == null || limit.longValue() == 0L) {
+			return ApiResultBuilder.create().code(ApiResultCode.DataIllegality.code()).msg(ApiResultCode.DataIllegality.msg()).build();
+		}
+		User user = new User();
+		user.setPage(page);
+		user.setLimit(limit);
+		Long count = userService.getRolesCount(user);
+		ApiPagination pagination = new ApiPagination(page, limit, count);
+		user.setOffset(pagination.getOffset());
+		List<User> users = userService.getRoles(user);
+		return ApiResultBuilder.create().code(ApiResultCode.Success.code()).data(users).pagination(pagination).build();
+	}
+
+	@RequestMapping("/disRole")
+	@ResponseBody
+	public ApiResult disRole(@RequestBody ApiParams<User> params) {
+		if (params.getData() == null) {
+			return ApiResultBuilder.create().code(ApiResultCode.DataIllegality.code()).msg(ApiResultCode.DataIllegality.msg()).build();
+		}
+		if (userService.disRole(params.getData()) > 0) {
+			return ApiResultBuilder.create().code(ApiResultCode.Success.code()).msg("分配成功").build();
+		} else {
+			return ApiResultBuilder.create().code(ApiResultCode.BusinessException.code()).msg("分配失败").build();
 		}
 	}
 }

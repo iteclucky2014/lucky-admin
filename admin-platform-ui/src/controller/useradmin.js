@@ -2,36 +2,50 @@
 ;
 layui.define(["table", "form"],
 function(e) {
-    var i = (layui.$, layui.admin),
+    var i = (layui.$, layui.admin), $ = layui.$,
     t = layui.view,
-    l = layui.table,
+    l = layui.table, table = layui.table,
     r = layui.form;
     l.render({
         elem: "#LAY-user-manage",
-        url: "./json/useradmin/webuser.js",
+        url: "/lucky/user/getUsers?access_token=" + layui.data(layui.setter.tableName)[layui.setter.request.tokenName],
         cols: [[{
             type: "checkbox",
             fixed: "left"
         },
-        {
-            field: "id",
-            width: 100,
-            title: "ID",
-            sort: !0
-        },
+        // {
+        //     field: "id",
+        //     width: 100,
+        //     title: "ID",
+        //     sort: !0
+        // },
         {
             field: "username",
             title: "用户名",
-            minWidth: 100
+            minWidth: 150
         },
         {
-            field: "avatar",
-            title: "头像",
-            width: 100,
-            templet: "#imgTpl"
+            field: "roleName",
+            title: "角色"
         },
         {
-            field: "phone",
+            field: "nickname",
+            title: "昵称"
+        },
+        // {
+        //     field: "avatar",
+        //     title: "头像",
+        //     width: 100,
+        //     templet: "#imgTpl"
+        // },
+        {
+            field: "sex",
+            title: "性别",
+            templet: "#sex",
+            width: 100
+        },
+        {
+            field: "mobile",
             title: "手机"
         },
         {
@@ -39,57 +53,138 @@ function(e) {
             title: "邮箱"
         },
         {
-            field: "sex",
-            width: 80,
-            title: "性别"
+            field: "createTime",
+            title: "注册时间"
+            // sort: !0
         },
         {
-            field: "ip",
-            title: "IP"
-        },
-        {
-            field: "jointime",
-            title: "加入时间",
-            sort: !0
+            field: "isDelete",
+            title: "状态",
+            templet: "#isDelete",
+            width: 100,
+            align: "center"
         },
         {
             title: "操作",
-            width: 150,
+            width: 200,
             align: "center",
             fixed: "right",
             toolbar: "#table-useradmin-webuser"
         }]],
         page: !0,
-        limit: 30,
+        limit: 50,
         height: "full-320",
-        text: "对不起，加载出现异常！"
+        text: { none: '数据不存在！' }
     }),
     l.on("tool(LAY-user-manage)",
     function(e) {
         var l = e.data;
-        "del" === e.event ? layer.prompt({
-            formType: 1,
-            title: "敏感操作，请验证口令"
-        },
-        function(i, t) {
-            layer.close(t),
-            layer.confirm("真的删除行么",
+        "del" === e.event ? // layer.prompt({
+        //     formType: 1,
+        //     title: "敏感操作，请验证口令"
+        // },
+        // function(i, t) {
+        //     layer.close(t),
+            layer.confirm("确定删除吗？",
             function(i) {
-                e.del(),
-                layer.close(i)
-            })
+                layer.close(i);
+
+                var users = [];
+                var tuser = {
+                    id: l.id
+                }
+                users.push(tuser);
+
+                layui.admin.req({
+                    url: '/lucky/user/batchDel?access_token=' + layui.data(layui.setter.tableName)[layui.setter.request.tokenName]
+                    ,type: 'POST'
+                    ,contentType: 'application/json; charset=utf-8'
+                    ,data: JSON.stringify({
+                        data: users
+                    })
+                    ,success: function(res) {
+                        if (res.code === layui.setter.response.statusCode.ok) {
+                            //修改成功的提示与跳转
+                            layer.msg(res.msg, {
+                                offset: '15px'
+                                , icon: 1
+                                , time: 1000
+                            }, function () {
+                                table.reload('LAY-user-manage');
+                            });
+                        } else if (res.code !== layui.setter.response.statusCode.logout) {
+                            layer.msg(res.msg, {
+                                icon: 5
+                                ,time: 1000
+                            });
+                        }
+                    }
+                    ,error: function(res) {
+                        layer.msg(res, {
+                            icon: 5
+                            ,time: 1000
+                        });
+                    }
+                });
+            // })
         }) : "edit" === e.event && i.popup({
-            title: "编辑用户",
-            area: ["500px", "450px"],
+            title: "分配角色",
+            area: ["1000px", "1350px"],
             id: "LAY-popup-user-add",
             success: function(e, i) {
+                $("#roleId").val(l.roleId);
                 t(this.id).render("user/user/userform", l).done(function() {
                     r.render(null, "layuiadmin-form-useradmin"),
                     r.on("submit(LAY-user-front-submit)",
                     function(e) {
-                        e.field;
-                        layui.table.reload("LAY-user-manage"),
-                        layer.close(i)
+                        var checkStatus = table.checkStatus('LAY-user-role'),
+                            checkData = checkStatus.data; //得到选中的数据
+
+                        if(checkData.length === 0){
+                            return layer.msg('请选择角色', {
+                                icon: 5
+                                ,time: 1000
+                            });
+                        }
+
+                        layer.close(i);
+
+                        var tuser = {
+                            id: l.id,
+                            roleId: checkData[0].id
+                        }
+
+                        layui.admin.req({
+                            url: '/lucky/user/disRole?access_token=' + layui.data(layui.setter.tableName)[layui.setter.request.tokenName]
+                            ,type: 'POST'
+                            ,contentType: 'application/json; charset=utf-8'
+                            ,data: JSON.stringify({
+                                data: tuser
+                            })
+                            ,success: function(res) {
+                                if (res.code === layui.setter.response.statusCode.ok) {
+                                    //修改成功的提示与跳转
+                                    layer.msg(res.msg, {
+                                        offset: '15px'
+                                        , icon: 1
+                                        , time: 1000
+                                    }, function () {
+                                        table.reload('LAY-user-manage');
+                                    });
+                                } else if (res.code !== layui.setter.response.statusCode.logout) {
+                                    layer.msg(res.msg, {
+                                        icon: 5
+                                        ,time: 1000
+                                    });
+                                }
+                            }
+                            ,error: function(res) {
+                                layer.msg(res, {
+                                    icon: 5
+                                    ,time: 1000
+                                });
+                            }
+                        });
                     })
                 })
             }

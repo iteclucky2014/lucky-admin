@@ -19,24 +19,24 @@
           
           <div class="layui-form" lay-filter="info-form">
             <div class="layui-form-item">
-              <label class="layui-form-label">我的角色</label>
-              <div class="layui-input-inline">
-                <input type="text" name="rolename" readonly class="layui-input">
-                <!--<select name="role" lay-verify="">-->
-                  <!--<option value="1" selected>超级管理员</option>-->
-                  <!--<option value="2" disabled>普通管理员</option>-->
-                  <!--<option value="3" disabled>审核员</option>-->
-                  <!--<option value="4" disabled>编辑人员</option>-->
-                <!--</select>-->
-              </div>
-              <!--<div class="layui-form-mid layui-word-aux">当前角色不可更改为其它角色</div>-->
-            </div>
-            <div class="layui-form-item">
               <label class="layui-form-label">用户名</label>
               <div class="layui-input-inline">
                 <input type="text" name="username" readonly class="layui-input">
               </div>
               <!--<div class="layui-form-mid layui-word-aux">不可修改。一般用于后台登入名</div>-->
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label">角色</label>
+              <div class="layui-input-inline">
+                <input type="text" name="rolename" readonly class="layui-input">
+                <!--<select name="role" lay-verify="">-->
+                <!--<option value="1" selected>超级管理员</option>-->
+                <!--<option value="2" disabled>普通管理员</option>-->
+                <!--<option value="3" disabled>审核员</option>-->
+                <!--<option value="4" disabled>编辑人员</option>-->
+                <!--</select>-->
+              </div>
+              <!--<div class="layui-form-mid layui-word-aux">当前角色不可更改为其它角色</div>-->
             </div>
             <div class="layui-form-item">
               <label class="layui-form-label">昵称</label>
@@ -47,7 +47,7 @@
             <div class="layui-form-item">
               <label class="layui-form-label">性别</label>
               <div class="layui-input-block">
-                <input type="radio" name="sex" value="0" title="保密">
+                <!--<input type="radio" name="sex" value="0" title="保密">-->
                 <input type="radio" name="sex" value="1" title="男">
                 <input type="radio" name="sex" value="2" title="女">
               </div>
