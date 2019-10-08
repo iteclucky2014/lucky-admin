@@ -63,7 +63,7 @@
 				and tuser.IS_DELETE = #{isDelete,jdbcType=CHAR}
 			</if>
 		</where>
-		order by tuser.UPDATE_TIME desc
+		order by tuser.CREATE_TIME desc
 		limit #{offset}, #{limit}
 	</select>
 
@@ -217,7 +217,7 @@
 		select
 		ID, ROLE_NAME, ROLE_DESC
 		from trole where ID > 1 and IS_DELETE = '0'
-		order by UPDATE_TIME desc
+		order by ID asc
 		limit #{offset}, #{limit}
 	</select>
 
