@@ -233,7 +233,7 @@
 	<update id="disRole" parameterType="com.lucky.admin.platform.vo.User">
 		update tuser
 		set ROLE_ID = #{roleId,jdbcType=INTEGER}
-		where ID = #{id,jdbcType=INTEGER}
+		where ID = #{id,jdbcType=INTEGER} and IS_DELETE = '0'
 	</update>
 
 </mapper>

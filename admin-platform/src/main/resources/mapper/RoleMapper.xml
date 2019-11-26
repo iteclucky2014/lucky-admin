@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lucky.admin.platform.dao.RoleMapper">
+	
+	<resultMap id="BaseResultMap" type="com.lucky.admin.platform.vo.Role">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="ROLE_NAME" property="roleName" jdbcType="VARCHAR" />
+		<result column="ROLE_DESC" property="roleDesc" jdbcType="VARCHAR" />
+		<result column="AUTH" property="auth" jdbcType="INTEGER" />
+		<result column="MENU_ID" property="menuId" jdbcType="INTEGER" />
+		<result column="ROOT" property="root" jdbcType="INTEGER" />
+		<result column="SEQ" property="seq" jdbcType="INTEGER" />
+		<result column="ICON" property="icon" jdbcType="VARCHAR" />
+		<result column="TITLE" property="title" jdbcType="VARCHAR" />
+		<result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="IS_DELETE" property="isDelete" jdbcType="CHAR" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID, ROLE_NAME, ROLE_DESC, CREATE_TIME, UPDATE_TIME, IS_DELETE
+	</sql>
+
+	<select id="getRoles" parameterType="com.lucky.admin.platform.vo.Role" resultMap="BaseResultMap">
+		select
+		ID, ROLE_NAME, ROLE_DESC, IS_DELETE
+		from trole
+		<where>
+			<if test="roleName != null and roleName != ''">
+				ROLE_NAME like concat('%', #{roleName,jdbcType=VARCHAR}, '%')
+			</if>
+			<if test="roleDesc != null and roleDesc != ''">
+				and ROLE_DESC like concat('%', #{roleDesc,jdbcType=VARCHAR}, '%')
+			</if>
+			<if test="isDelete != null and isDelete != ''">
+				and IS_DELETE = #{isDelete,jdbcType=CHAR}
+			</if>
+		</where>
+		order by ID asc
+		limit #{offset}, #{limit}
+	</select>
+
+	<select id="getRolesCount" parameterType="com.lucky.admin.platform.vo.Role" resultType="java.lang.Long">
+		select count(*) from
+		(
+		select
+		ID, ROLE_NAME, ROLE_DESC, IS_DELETE
+		from trole
+		<where>
+			<if test="roleName != null and roleName != ''">
+				ROLE_NAME like concat('%', #{roleName,jdbcType=VARCHAR}, '%')
+			</if>
+			<if test="roleDesc != null and roleDesc != ''">
+				and ROLE_DESC like concat('%', #{roleDesc,jdbcType=VARCHAR}, '%')
+			</if>
+			<if test="isDelete != null and isDelete != ''">
+				and IS_DELETE = #{isDelete,jdbcType=CHAR}
+			</if>
+		</where>
+		) ROLES
+	</select>
+
+	<select id="chkRole" parameterType="com.lucky.admin.platform.vo.Role" resultMap="BaseResultMap">
+		select
+		ID, ROLE_NAME, ROLE_DESC
+		from trole
+		where ID != #{id,jdbcType=INTEGER} and ROLE_NAME = #{roleName,jdbcType=VARCHAR}
+		and IS_DELETE = '0'
+	</select>
+
+	<select id="getRoleByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		ID, ROLE_NAME, ROLE_DESC
+		from trole
+		where ROLE_NAME = #{roleName,jdbcType=VARCHAR}
+		and IS_DELETE = '0'
+	</select>
+
+	<insert id="createRole" parameterType="com.lucky.admin.platform.vo.Role">
+		insert into trole
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="roleName != null">
+				ROLE_NAME,
+			</if>
+			<if test="roleDesc != null">
+				ROLE_DESC,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="roleName != null">
+				#{roleName,jdbcType=VARCHAR},
+			</if>
+			<if test="roleDesc != null">
+				#{roleDesc,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="modifyRole" parameterType="com.lucky.admin.platform.vo.Role">
+		update trole
+		<set>
+			<if test="roleName != null">
+				ROLE_NAME = #{roleName,jdbcType=VARCHAR},
+			</if>
+			<if test="roleDesc != null">
+				ROLE_DESC = #{roleDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="isDelete != null">
+				IS_DELETE = #{isDelete,jdbcType=CHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=INTEGER}
+	</update>
+
+	<update id="batchDel" parameterType="java.util.List">
+		update trole
+		set
+		IS_DELETE = '1'
+		where
+		ID in
+		<foreach collection="list" item="bean" index="index" open="(" close=")" separator=",">
+			#{bean.id,jdbcType=INTEGER}
+		</foreach>
+	</update>
+	
+	<update id="delAuth" parameterType="java.util.List">
+		update tauthority
+		set
+		IS_DELETE = '1'
+		where
+		ROLE_ID in
+		<foreach collection="list" item="bean" index="index" open="(" close=")" separator=",">
+			#{bean.id,jdbcType=INTEGER}
+		</foreach>
+	</update>
+	
+	<update id="updUser" parameterType="java.util.List">
+		update tuser
+		set
+		ROLE_ID = '0'
+		where
+		ROLE_ID in
+		<foreach collection="list" item="bean" index="index" open="(" close=")" separator=",">
+			#{bean.id,jdbcType=INTEGER}
+		</foreach>
+	</update>
+	
+	<select id="getRoleUser" parameterType="com.lucky.admin.platform.vo.Role" resultType="java.util.Map">
+		select
+		ID, USERNAME, NICKNAME, SEX, MOBILE, EMAIL
+		from
+		tuser
+		where
+		ROLE_ID = #{id,jdbcType=INTEGER} and IS_DELETE = '0'
+		order by ID asc
+		limit #{offset}, #{limit}
+	</select>
+
+	<select id="getRoleUserCount" parameterType="com.lucky.admin.platform.vo.Role" resultType="java.lang.Long">
+		select count(*) from
+		(
+		select
+		ID, USERNAME, NICKNAME, SEX, MOBILE, EMAIL
+		from
+		tuser
+		where
+		ROLE_ID = #{id,jdbcType=INTEGER} and IS_DELETE = '0'
+		) USERS
+	</select>
+
+	<select id="getRoleAuth" parameterType="com.lucky.admin.platform.vo.Role" resultMap="BaseResultMap">
+		select
+		case when tauth.ID is not null then '1' else '0' end as AUTH, tmenu.ID as MENU_ID, ROOT, SEQ, ICON, TITLE, ADDRESS
+		from
+		tmenu
+		left join
+		(select ID, ROLE_ID, MENU_ID from tauthority where ROLE_ID = #{id,jdbcType=INTEGER} and IS_DELETE = '0') tauth
+		on
+		tmenu.ID = tauth.MENU_ID
+		where
+		tmenu.IS_DELETE = '0'
+		order by tmenu.ROOT asc, tmenu.SEQ asc
+	</select>
+
+	<insert id="addAuth" parameterType="java.util.List">
+		insert into tauthority
+		(ROLE_ID, MENU_ID)
+		values
+		<foreach collection="list" item="bean" index="index" separator=",">
+			(#{bean.id,jdbcType=INTEGER}, #{bean.menuId,jdbcType=INTEGER})
+		</foreach>
+	</insert>
+
+</mapper>

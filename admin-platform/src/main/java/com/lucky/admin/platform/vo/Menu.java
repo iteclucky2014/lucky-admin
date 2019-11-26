@@ -7,7 +7,7 @@ import com.lucky.admin.platform.common.BaseEntity;
  */
 public class Menu extends BaseEntity {
 
-    private int order;
+    private int seq;
     
     private String menuName;
     
@@ -18,12 +18,12 @@ public class Menu extends BaseEntity {
     public Menu() {
     }
 
-    public int getOrder() {
-        return order;
+    public int getSeq() {
+        return seq;
     }
 
-    public void setOrder(int order) {
-        this.order = order;
+    public void setSeq(int seq) {
+        this.seq = seq;
     }
 
     public String getMenuName() {

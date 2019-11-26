@@ -73,7 +73,7 @@ function(e) {
         }]],
         page: !0,
         limit: 50,
-        height: "full-320",
+        height: "full-275",
         text: { none: '数据不存在！' }
     }),
     l.on("tool(LAY-user-manage)",
@@ -130,7 +130,7 @@ function(e) {
         }) : "edit" === e.event && i.popup({
             title: "分配角色",
             area: ["1000px", "1350px"],
-            id: "LAY-popup-user-add",
+            id: "LAY-popup-user-role",
             success: function(e, i) {
                 $("#roleId").val(l.roleId);
                 t(this.id).render("user/user/userform", l).done(function() {
@@ -274,61 +274,206 @@ function(e) {
     }),
     l.render({
         elem: "#LAY-user-back-role",
-        url: "./json/useradmin/role.js",
+        url: "/lucky/role/getRoles?access_token=" + layui.data(layui.setter.tableName)[layui.setter.request.tokenName],
         cols: [[{
             type: "checkbox",
             fixed: "left"
         },
         {
             field: "id",
-            width: 80,
             title: "ID",
-            sort: !0
+            width: 100,
+            align: "right"
         },
         {
-            field: "rolename",
-            title: "角色名"
+            field: "roleName",
+            title: "角色名称",
+            width: 600
         },
         {
-            field: "limits",
-            title: "拥有权限"
+            field: "roleDesc",
+            title: "角色描述"
         },
         {
-            field: "descr",
-            title: "具体描述"
+            field: "isDelete",
+            title: "状态",
+            templet: "#isDelete",
+            width: 100,
+            align: "center"
         },
         {
             title: "操作",
-            width: 150,
+            width: 350,
             align: "center",
             fixed: "right",
             toolbar: "#table-useradmin-admin"
         }]],
-        text: "对不起，加载出现异常！"
+        page: !0,
+        limit: 50,
+        height: "full-275",
+        text: { none: '数据不存在！' }
     }),
     l.on("tool(LAY-user-back-role)",
     function(e) {
         var l = e.data;
-        "del" === e.event ? layer.confirm("确定删除此角色？",
+        "del" === e.event ? layer.confirm("确定删除吗？",
         function(i) {
-            e.del(),
-            layer.close(i)
-        }) : "edit" === e.event && i.popup({
-            title: "添加新角色",
-            area: ["500px", "480px"],
-            id: "LAY-popup-user-add",
+            layer.close(i);
+
+            var roles = [];
+            var trole = {
+                id: l.id
+            }
+            roles.push(trole);
+
+            layui.admin.req({
+                url: '/lucky/role/batchDel?access_token=' + layui.data(layui.setter.tableName)[layui.setter.request.tokenName]
+                ,type: 'POST'
+                ,contentType: 'application/json; charset=utf-8'
+                ,data: JSON.stringify({
+                    data: roles
+                })
+                ,success: function(res) {
+                    if (res.code === layui.setter.response.statusCode.ok) {
+                        //修改成功的提示与跳转
+                        layer.msg(res.msg, {
+                            offset: '15px'
+                            , icon: 1
+                            , time: 1000
+                        }, function () {
+                            table.reload('LAY-user-back-role');
+                        });
+                    } else if (res.code !== layui.setter.response.statusCode.logout) {
+                        layer.msg(res.msg, {
+                            icon: 5
+                            ,time: 1000
+                        });
+                    }
+                }
+                ,error: function(res) {
+                    layer.msg(res, {
+                        icon: 5
+                        ,time: 1000
+                    });
+                }
+            });
+        }) : ("edit" === e.event ? i.popup({
+            title: "编辑角色",
+            area: ["500px", "350px"],
+            id: "LAY-popup-role-edit",
             success: function(e, i) {
                 t(this.id).render("user/administrators/roleform", l).done(function() {
                     r.render(null, "layuiadmin-form-role"),
                     r.on("submit(LAY-user-role-submit)",
                     function(e) {
-                        e.field;
-                        layui.table.reload("LAY-user-back-role"),
-                        layer.close(i)
+                        var field = e.field;
+                        field.id = l.id;
+
+                        //提交 Ajax 成功后，关闭当前弹层并重载表格
+                        layui.admin.req({
+                            url: '/lucky/role/modify?access_token=' + layui.data(layui.setter.tableName)[layui.setter.request.tokenName]
+                            ,type: 'POST'
+                            ,contentType: 'application/json; charset=utf-8'
+                            ,data: JSON.stringify({
+                                data: field
+                            })
+                            ,success: function(res) {
+                                if (res.code === layui.setter.response.statusCode.ok) {
+                                    layer.close(i); //执行关闭
+                                    //修改成功的提示与跳转
+                                    layer.msg(res.msg, {
+                                        offset: '15px'
+                                        , icon: 1
+                                        , time: 1000
+                                    }, function () {
+                                        layui.table.reload('LAY-user-back-role'); //重载表格
+                                    });
+                                } else if (res.code !== layui.setter.response.statusCode.logout) {
+                                    layer.msg(res.msg, {
+                                        icon: 5
+                                        ,time: 1000
+                                    });
+                                } else if (res.code === layui.setter.response.statusCode.logout) {
+                                    layer.close(i); //执行关闭
+                                }
+                            }
+                            ,error: function(res) {
+                                layer.msg(res, {
+                                    icon: 5
+                                    ,time: 1000
+                                });
+                            }
+                        });
                     })
                 })
             }
-        })
+        }) : ("chk" === e.event ? i.popup({
+            title: "查看用户",
+            area: ["1500px", "1350px"],
+            id: "LAY-popup-role-user",
+            success: function(e, i) {
+                $("#id").val(l.id);
+                t(this.id).render("user/administrators/roleuser", l).done(function() {
+                    r.render(null, "layuiadmin-form-roleuser"),
+                        r.on("submit(LAY-role-user-submit)",
+                            function(e) {
+                                layer.close(i); //执行关闭
+                            })
+                })
+            }
+        }) : "auth" === e.event && i.popup({
+            title: "分配权限",
+            area: ["1000px", "1350px"],
+            id: "LAY-popup-role-auth",
+            success: function(e, i) {
+                $("#id").val(l.id);
+                $("#ind").val(i);
+                t(this.id).render("user/administrators/roleauth", l).done(function() {
+                    r.render(null, "layuiadmin-form-roleauth");
+                        // r.on("submit(LAY-role-auth-submit)",
+                        //     function(e) {
+                        //         var field = e.field;
+                        //         field.id = l.id;
+                        //
+                        //         //提交 Ajax 成功后，关闭当前弹层并重载表格
+                        //         layui.admin.req({
+                        //             url: '/lucky/role/modify?access_token=' + layui.data(layui.setter.tableName)[layui.setter.request.tokenName]
+                        //             ,type: 'POST'
+                        //             ,contentType: 'application/json; charset=utf-8'
+                        //             ,data: JSON.stringify({
+                        //                 data: field
+                        //             })
+                        //             ,success: function(res) {
+                        //                 if (res.code === layui.setter.response.statusCode.ok) {
+                        //                     layer.close(i); //执行关闭
+                        //                     //修改成功的提示与跳转
+                        //                     layer.msg(res.msg, {
+                        //                         offset: '15px'
+                        //                         , icon: 1
+                        //                         , time: 1000
+                        //                     }, function () {
+                        //                         layui.table.reload('LAY-user-back-role'); //重载表格
+                        //                     });
+                        //                 } else if (res.code !== layui.setter.response.statusCode.logout) {
+                        //                     layer.msg(res.msg, {
+                        //                         icon: 5
+                        //                         ,time: 1000
+                        //                     });
+                        //                 } else if (res.code === layui.setter.response.statusCode.logout) {
+                        //                     layer.close(i); //执行关闭
+                        //                 }
+                        //             }
+                        //             ,error: function(res) {
+                        //                 layer.msg(res, {
+                        //                     icon: 5
+                        //                     ,time: 1000
+                        //                 });
+                        //             }
+                        //         });
+                        //     })
+                })
+            }
+        })))
     }),
     e("useradmin", {})
 });

@@ -15,39 +15,58 @@
     <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="layadmin-useradminrole-formlist">
       <div class="layui-form-item">
         <div class="layui-inline">
-          角色筛选
+          <label class="layui-form-label">角色名称</label>
+          <div class="layui-input-block">
+            <input type="text" name="roleName" placeholder="请输入" autocomplete="off" class="layui-input">
+          </div>
         </div>
         <div class="layui-inline">
-          <select name="rolename" lay-filter="LAY-user-adminrole-type">
-            <option value="-1">全部角色</option>
-            <option value="0">管理员</option>
-            <option value="1">超级管理员</option>
-            <option value="2">纠错员</option>
-            <option value="3">采购员</option>
-            <option value="4">推销员</option>
-            <option value="5">运营人员</option>
-            <option value="6">编辑</option>
-          </select>
+          <label class="layui-form-label">角色描述</label>
+          <div class="layui-input-block">
+            <input type="text" name="roleDesc" placeholder="请输入" autocomplete="off" class="layui-input" size="64">
+          </div>
+        </div>
+        <div class="layui-inline">
+          <label class="layui-form-label">状态</label>
+          <div class="layui-input-block">
+            <select name="isDelete">
+              <option value="">全部</option>
+              <option value="0">正常</option>
+              <option value="1">已删除</option>
+            </select>
+          </div>
+        </div>
+        <div class="layui-inline">
+          <button class="layui-btn layuiadmin-btn-useradmin" lay-submit lay-filter="LAY-role-front-search">
+            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+          </button>
         </div>
       </div>
     </div>
     <div class="layui-card-body">
       <div style="padding-bottom: 10px;">
-        <button class="layui-btn layuiadmin-btn-role" data-type="batchdel">删除</button>
-        <button class="layui-btn layuiadmin-btn-role" data-type="add">添加</button>
+        <button class="layui-btn layui-btn-danger layuiadmin-btn-role" data-type="batchdel">删除</button>
+        <button class="layui-btn layui-btn-normal layuiadmin-btn-role" data-type="add">添加</button>
       </div>
     
-      <table id="LAY-user-back-role" lay-filter="LAY-user-back-role"></table>  
-      <script type="text/html" id="buttonTpl">
-        {{#  if(d.check == true){ }}
-          <button class="layui-btn layui-btn-xs">已审核</button>
+      <table id="LAY-user-back-role" lay-filter="LAY-user-back-role"></table>
+      <input type="hidden" id="id">
+      <input type="hidden" id="ind">
+      <script type="text/html" id="isDelete">
+        {{#  if (d.isDelete == '0') { }}
+        <button class="layui-btn layui-btn-xs">正常</button>
+        {{#  } else if (d.isDelete == '1') { }}
+        <button class="layui-btn layui-btn-primary layui-btn-xs">已删除</button>
         {{#  } else { }}
-          <button class="layui-btn layui-btn-primary layui-btn-xs">未审核</button>
         {{#  } }}
       </script>
       <script type="text/html" id="table-useradmin-admin">
+        {{#  if (d.isDelete == '0') { }}
+        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="chk"><i class="layui-icon layui-icon-form"></i>查看用户</a>
+        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="auth"><i class="layui-icon layui-icon-edit"></i>分配权限</a>
         <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
+        {{#  } }}
       </script>
     </div>
   </div>
@@ -64,12 +83,10 @@ layui.use('useradmin', layui.factory('useradmin')).use(['admin', 'useradmin', 't
   form.render(null, 'layadmin-useradminrole-formlist');
   
   //搜索角色
-  form.on('select(LAY-user-adminrole-type)', function(data){
+  form.on('submit(LAY-role-front-search)', function(data){
     //执行重载
     table.reload('LAY-user-back-role', {
-      where: {
-        role: data.value
-      }
+      where: data.field
     });
   });
 
@@ -80,11 +97,28 @@ layui.use('useradmin', layui.factory('useradmin')).use(['admin', 'useradmin', 't
       ,checkData = checkStatus.data; //得到选中的数据
 
       if(checkData.length === 0){
-        return layer.msg('请选择数据');
+        return layer.msg('请选择角色', {
+          icon: 5
+          ,time: 1000
+        });
+      }
+
+      var roles = [];
+      for (var i = 0; i < checkData.length; i++) {
+        if (checkData[i].isDelete == "1") {
+          return layer.msg('请选择正常角色', {
+            icon: 5
+            ,time: 2000
+          });
+        }
+        var trole = {
+          id: checkData[i].id
+        }
+        roles.push(trole);
       }
       
       layer.confirm('确定删除吗？', function(index) {
-          
+        layer.close(index);
         //执行 Ajax 后重载
         /*
         admin.req({
@@ -92,14 +126,43 @@ layui.use('useradmin', layui.factory('useradmin')).use(['admin', 'useradmin', 't
           //,……
         });
         */
-        table.reload('LAY-user-back-role');
-        layer.msg('已删除');
+        layui.admin.req({
+          url: '/lucky/role/batchDel?access_token=' + layui.data(layui.setter.tableName)[layui.setter.request.tokenName]
+          ,type: 'POST'
+          ,contentType: 'application/json; charset=utf-8'
+          ,data: JSON.stringify({
+            data: roles
+          })
+          ,success: function(res) {
+            if (res.code === layui.setter.response.statusCode.ok) {
+              //修改成功的提示与跳转
+              layer.msg(res.msg, {
+                offset: '15px'
+                , icon: 1
+                , time: 1000
+              }, function () {
+                table.reload('LAY-user-back-role');
+              });
+            } else if (res.code !== layui.setter.response.statusCode.logout) {
+              layer.msg(res.msg, {
+                icon: 5
+                ,time: 1000
+              });
+            }
+          }
+          ,error: function(res) {
+            layer.msg(res, {
+              icon: 5
+              ,time: 1000
+            });
+          }
+        });
       });
     },
     add: function(){
       admin.popup({
-        title: '添加新角色'
-        ,area: ['500px', '480px']
+        title: '添加角色'
+        ,area: ['500px', '350px']
         ,id: 'LAY-popup-user-add'
         ,success: function(layero, index){
           view(this.id).render('user/administrators/roleform').done(function(){
@@ -110,9 +173,40 @@ layui.use('useradmin', layui.factory('useradmin')).use(['admin', 'useradmin', 't
               var field = data.field; //获取提交的字段
 
               //提交 Ajax 成功后，关闭当前弹层并重载表格
-              //$.ajax({});
-              layui.table.reload('LAY-user-back-role'); //重载表格
-              layer.close(index); //执行关闭 
+              layui.admin.req({
+                url: '/lucky/role/create?access_token=' + layui.data(layui.setter.tableName)[layui.setter.request.tokenName]
+                ,type: 'POST'
+                ,contentType: 'application/json; charset=utf-8'
+                ,data: JSON.stringify({
+                  data: field
+                })
+                ,success: function(res) {
+                  if (res.code === layui.setter.response.statusCode.ok) {
+                    layer.close(index); //执行关闭
+                    //修改成功的提示与跳转
+                    layer.msg(res.msg, {
+                      offset: '15px'
+                      , icon: 1
+                      , time: 1000
+                    }, function () {
+                      layui.table.reload('LAY-user-back-role'); //重载表格
+                    });
+                  } else if (res.code !== layui.setter.response.statusCode.logout) {
+                    layer.msg(res.msg, {
+                      icon: 5
+                      ,time: 1000
+                    });
+                  } else if (res.code === layui.setter.response.statusCode.logout) {
+                    layer.close(index); //执行关闭
+                  }
+                }
+                ,error: function(res) {
+                  layer.msg(res, {
+                    icon: 5
+                    ,time: 1000
+                  });
+                }
+              });
             });
           });
         }

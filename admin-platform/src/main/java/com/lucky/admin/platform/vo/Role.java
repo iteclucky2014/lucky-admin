@@ -15,6 +15,20 @@ public class Role extends BaseEntity implements GrantedAuthority {
     
     private String roleDesc;
 
+    private int auth;
+    
+    private int menuId;
+    
+    private int root;
+    
+    private int seq;
+    
+    private String icon;
+    
+    private String title;
+    
+    private String address;
+
     private Set<Menu> permissions = new HashSet<>();
     
     public Role() {
@@ -43,6 +57,62 @@ public class Role extends BaseEntity implements GrantedAuthority {
 
     public void setRoleDesc(String roleDesc) {
         this.roleDesc = roleDesc;
+    }
+
+    public int getAuth() {
+        return auth;
+    }
+
+    public void setAuth(int auth) {
+        this.auth = auth;
+    }
+
+    public int getMenuId() {
+        return menuId;
+    }
+
+    public void setMenuId(int menuId) {
+        this.menuId = menuId;
+    }
+
+    public int getRoot() {
+        return root;
+    }
+
+    public void setRoot(int root) {
+        this.root = root;
+    }
+
+    public int getSeq() {
+        return seq;
+    }
+
+    public void setSeq(int seq) {
+        this.seq = seq;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public Set<Menu> getPermissions() {

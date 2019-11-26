@@ -1,0 +1,147 @@
+
+
+<div class="layui-form" lay-filter="layuiadmin-form-roleauth" style="padding: 20px 0 0 0;">
+  <div class="layui-form-item" style="margin-bottom: 0px;">
+    <div class="layui-inline">
+      <button class="layui-btn layui-btn-normal" id="btnExpandAll"><i class="layui-icon layui-icon-triangle-d"></i>全部展开</button>
+    </div>
+    <div class="layui-inline">
+      <button class="layui-btn layui-btn-normal" id="btnFoldAll"><i class="layui-icon layui-icon-triangle-r"></i>全部折叠</button>
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <table id="LAY-role-auth" lay-filter="LAY-role-auth"></table>
+  </div>
+  <div class="layui-form-item">
+    <div class="layui-input-inline">
+      <input type="button" lay-submit lay-filter="LAY-role-auth-submit" value="确定" class="layui-btn">
+    </div>
+  </div>
+</div>
+
+<script>
+layui.use(['admin', 'form', 'treeTable', 'upload'], function(){
+  var $ = layui.$
+  ,form = layui.form
+  ,treeTable = layui.treeTable
+  ,upload = layui.upload;
+
+  // 渲染表格
+  var insTb = treeTable.render({
+    elem: '#LAY-role-auth',
+    tree: {
+      idName: 'menuId',
+      pidName: 'root',
+      isPidData: true,
+      iconIndex: 3
+    },
+    cols: [
+      {
+        type: "checkbox"
+      },
+      {
+        field: 'menuId',
+        title: 'ID',
+        width: 80,
+        align: "right"
+      },
+      {
+        field: 'icon',
+        title: '图标',
+        width: 70,
+        align: "middle"
+      },
+      {
+        field: 'title',
+        title: '菜单',
+        width: 300
+      },
+      {
+        field: 'address',
+        title: '地址'
+      }
+    ],
+    reqData: function (data, callback) {
+      var url = "/lucky/role/getRoleAuth?id="+$("#id").val()+"&access_token=" + layui.data(layui.setter.tableName)[layui.setter.request.tokenName];
+      $.get(url, function (res) {
+        callback(res.data);
+        for (var i = 0; i < res.data.length; i++) {
+          if (res.data[i].auth == 1 && res.data[i].address != null && res.data[i].address != '') {
+            insTb.setChecked([res.data[i].menuId]);
+          }
+        }
+        insTb.expandAll();
+      });
+    },
+    height: "full-520"
+  });
+
+  // 全部展开
+  $('#btnExpandAll').click(function () {
+    insTb.expandAll();
+  });
+
+  // 全部折叠
+  $('#btnFoldAll').click(function () {
+    insTb.foldAll();
+  });
+
+  form.on("submit(LAY-role-auth-submit)",
+          function(e) {
+
+            var checkStatus = insTb.checkStatus();
+
+            if(checkStatus.length === 0){
+              return layer.msg('请选择权限', {
+                icon: 5
+                ,time: 1000
+              });
+            }
+
+            var roles = [];
+            for (var i = 0; i <checkStatus.length; i++) {
+              var trole = {
+                id: $("#id").val(),
+                menuId: checkStatus[i].menuId
+              }
+              roles.push(trole);
+            }
+
+            //提交 Ajax 成功后，关闭当前弹层并重载表格
+            layui.admin.req({
+              url: '/lucky/role/disAuth?access_token=' + layui.data(layui.setter.tableName)[layui.setter.request.tokenName]
+              ,type: 'POST'
+              ,contentType: 'application/json; charset=utf-8'
+              ,data: JSON.stringify({
+                data: roles
+              })
+              ,success: function(res) {
+                if (res.code === layui.setter.response.statusCode.ok) {
+                  layer.close($("#ind").val()); //执行关闭
+                  //修改成功的提示与跳转
+                  layer.msg(res.msg, {
+                    offset: '15px'
+                    , icon: 1
+                    , time: 1000
+                  }, function () {
+                    // layui.table.reload('LAY-user-back-role'); //重载表格
+                  });
+                } else if (res.code !== layui.setter.response.statusCode.logout) {
+                  layer.msg(res.msg, {
+                    icon: 5
+                    ,time: 1000
+                  });
+                } else if (res.code === layui.setter.response.statusCode.logout) {
+                  layer.close($("#ind").val()); //执行关闭
+                }
+              }
+              ,error: function(res) {
+                layer.msg(res, {
+                  icon: 5
+                  ,time: 1000
+                });
+              }
+            });
+          });
+})
+</script>
