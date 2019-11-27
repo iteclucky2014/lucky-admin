@@ -27,8 +27,9 @@
 		ID, ROLE_NAME, ROLE_DESC, IS_DELETE
 		from trole
 		<where>
+			ID > 1
 			<if test="roleName != null and roleName != ''">
-				ROLE_NAME like concat('%', #{roleName,jdbcType=VARCHAR}, '%')
+				and ROLE_NAME like concat('%', #{roleName,jdbcType=VARCHAR}, '%')
 			</if>
 			<if test="roleDesc != null and roleDesc != ''">
 				and ROLE_DESC like concat('%', #{roleDesc,jdbcType=VARCHAR}, '%')
@@ -48,8 +49,9 @@
 		ID, ROLE_NAME, ROLE_DESC, IS_DELETE
 		from trole
 		<where>
+			ID > 1
 			<if test="roleName != null and roleName != ''">
-				ROLE_NAME like concat('%', #{roleName,jdbcType=VARCHAR}, '%')
+				and ROLE_NAME like concat('%', #{roleName,jdbcType=VARCHAR}, '%')
 			</if>
 			<if test="roleDesc != null and roleDesc != ''">
 				and ROLE_DESC like concat('%', #{roleDesc,jdbcType=VARCHAR}, '%')
