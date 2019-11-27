@@ -66,7 +66,7 @@ layui.use(['admin', 'form', 'treeTable', 'upload'], function(){
       $.get(url, function (res) {
         callback(res.data);
         for (var i = 0; i < res.data.length; i++) {
-          if (res.data[i].auth == 1 && res.data[i].address != null && res.data[i].address != '') {
+          if (res.data[i].auth == 1 && res.data[i].address != null) {
             insTb.setChecked([res.data[i].menuId]);
           }
         }
