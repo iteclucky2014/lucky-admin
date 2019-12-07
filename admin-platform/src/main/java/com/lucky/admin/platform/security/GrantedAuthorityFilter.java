@@ -74,7 +74,7 @@ public class GrantedAuthorityFilter extends GenericFilterBean {
                     Role role = (Role) authority;
                     logger.debug("-----------> Role: {}({})", role.getRoleName(), role.getRoleDesc());
                     for (Menu permission : role.getPermissions()) {
-                        logger.debug("-----------> Permission: {}({})", permission.getMenuName(), permission.getAddress());
+                        logger.debug("-----------> Permission: {}({})", permission.getTitle(), permission.getAddress());
 
                         String[] urls = StringUtils.split(permission.getAddress(), ',');
 
