@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lucky.admin.platform.dao.MenuMapper">
+	
+	<resultMap id="BaseResultMap" type="com.lucky.admin.platform.vo.Menu">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="USER_ID" property="userId" jdbcType="INTEGER" />
+		<result column="ROOT" property="root" jdbcType="INTEGER" />
+		<result column="SEQ" property="seq" jdbcType="INTEGER" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="ICON" property="icon" jdbcType="VARCHAR" />
+		<result column="TITLE" property="title" jdbcType="VARCHAR" />
+		<result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="IS_DELETE" property="isDelete" jdbcType="CHAR" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID, ROOT, SEQ, NAME, ICON, TITLE, ADDRESS, CREATE_TIME, UPDATE_TIME, IS_DELETE
+	</sql>
+
+	<select id="getAuthMenu" parameterType="com.lucky.admin.platform.vo.Menu" resultMap="BaseResultMap">
+		select
+		tmenu.ID, tuser.ID as USER_ID, tmenu.ROOT, tmenu.SEQ, tmenu.NAME, tmenu.ICON, tmenu.TITLE, tmenu.ADDRESS
+		from tuser
+		inner join tauthority on tuser.ROLE_ID = tauthority.ROLE_ID and tauthority.IS_DELETE = '0'
+		inner join tmenu on tauthority.MENU_ID = tmenu.ID and tmenu.ROOT = #{root,jdbcType=INTEGER} and tmenu.IS_DELETE = '0'
+		where tuser.ID = #{userId,jdbcType=INTEGER} and tuser.IS_DELETE = '0'
+		order by tmenu.SEQ asc
+	</select>
+
+</mapper>
