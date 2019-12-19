@@ -190,88 +190,88 @@ function(e) {
             }
         })
     }),
-    l.render({
-        elem: "#LAY-user-back-manage",
-        url: "./json/useradmin/mangadmin.js",
-        cols: [[{
-            type: "checkbox",
-            fixed: "left"
-        },
-        {
-            field: "id",
-            width: 80,
-            title: "ID",
-            sort: !0
-        },
-        {
-            field: "loginname",
-            title: "登录名"
-        },
-        {
-            field: "telphone",
-            title: "手机"
-        },
-        {
-            field: "email",
-            title: "邮箱"
-        },
-        {
-            field: "role",
-            title: "角色"
-        },
-        {
-            field: "jointime",
-            title: "加入时间",
-            sort: !0
-        },
-        {
-            field: "check",
-            title: "审核状态",
-            templet: "#buttonTpl",
-            minWidth: 80,
-            align: "center"
-        },
-        {
-            title: "操作",
-            width: 150,
-            align: "center",
-            fixed: "right",
-            toolbar: "#table-useradmin-admin"
-        }]],
-        text: "对不起，加载出现异常！"
-    }),
-    l.on("tool(LAY-user-back-manage)",
-    function(e) {
-        var l = e.data;
-        "del" === e.event ? layer.prompt({
-            formType: 1,
-            title: "敏感操作，请验证口令"
-        },
-        function(i, t) {
-            layer.close(t),
-            layer.confirm("确定删除此管理员？",
-            function(i) {
-                console.log(e),
-                e.del(),
-                layer.close(i)
-            })
-        }) : "edit" === e.event && i.popup({
-            title: "编辑管理员",
-            area: ["420px", "450px"],
-            id: "LAY-popup-user-add",
-            success: function(e, i) {
-                t(this.id).render("user/administrators/adminform", l).done(function() {
-                    r.render(null, "layuiadmin-form-admin"),
-                    r.on("submit(LAY-user-back-submit)",
-                    function(e) {
-                        e.field;
-                        layui.table.reload("LAY-user-back-manage"),
-                        layer.close(i)
-                    })
-                })
-            }
-        })
-    }),
+    // treeTable.render({
+    //     elem: "#LAY-user-back-manage",
+    //     url: "/lucky/menu/getMenus?isDelete="+$("#isDelete").val()+"&access_token=" + layui.data(layui.setter.tableName)[layui.setter.request.tokenName],
+    //     cols: [[{
+    //         type: "checkbox",
+    //         fixed: "left"
+    //     },
+    //     {
+    //         field: "id",
+    //         width: 80,
+    //         title: "ID",
+    //         sort: !0
+    //     },
+    //     {
+    //         field: "loginname",
+    //         title: "登录名"
+    //     },
+    //     {
+    //         field: "telphone",
+    //         title: "手机"
+    //     },
+    //     {
+    //         field: "email",
+    //         title: "邮箱"
+    //     },
+    //     {
+    //         field: "role",
+    //         title: "角色"
+    //     },
+    //     {
+    //         field: "jointime",
+    //         title: "加入时间",
+    //         sort: !0
+    //     },
+    //     {
+    //         field: "check",
+    //         title: "审核状态",
+    //         templet: "#buttonTpl",
+    //         minWidth: 80,
+    //         align: "center"
+    //     },
+    //     {
+    //         title: "操作",
+    //         width: 150,
+    //         align: "center",
+    //         fixed: "right",
+    //         toolbar: "#table-useradmin-admin"
+    //     }]],
+    //     text: "对不起，加载出现异常！"
+    // }),
+    // l.on("tool(LAY-user-back-manage)",
+    // function(e) {
+    //     var l = e.data;
+    //     "del" === e.event ? layer.prompt({
+    //         formType: 1,
+    //         title: "敏感操作，请验证口令"
+    //     },
+    //     function(i, t) {
+    //         layer.close(t),
+    //         layer.confirm("确定删除此管理员？",
+    //         function(i) {
+    //             console.log(e),
+    //             e.del(),
+    //             layer.close(i)
+    //         })
+    //     }) : "edit" === e.event && i.popup({
+    //         title: "编辑管理员",
+    //         area: ["420px", "450px"],
+    //         id: "LAY-popup-user-add",
+    //         success: function(e, i) {
+    //             t(this.id).render("user/administrators/adminform", l).done(function() {
+    //                 r.render(null, "layuiadmin-form-admin"),
+    //                 r.on("submit(LAY-user-back-submit)",
+    //                 function(e) {
+    //                     e.field;
+    //                     layui.table.reload("LAY-user-back-manage"),
+    //                     layer.close(i)
+    //                 })
+    //             })
+    //         }
+    //     })
+    // }),
     l.render({
         elem: "#LAY-user-back-role",
         url: "/lucky/role/getRoles?access_token=" + layui.data(layui.setter.tableName)[layui.setter.request.tokenName],

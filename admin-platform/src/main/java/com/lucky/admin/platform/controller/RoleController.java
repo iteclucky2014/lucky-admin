@@ -18,7 +18,7 @@ public class RoleController {
 
 	@RequestMapping("/getRoles")
 	@ResponseBody
-	public ApiResult getUserByCondition(@RequestParam(required = false) Long page, @RequestParam(required = false) Long limit,
+	public ApiResult getRoleByCondition(@RequestParam(required = false) Long page, @RequestParam(required = false) Long limit,
 										@RequestParam(required = false) String roleName, @RequestParam(required = false) String roleDesc,
 										@RequestParam(required = false) String isDelete) {
 		if (page == null || page.longValue() == 0L || limit == null || limit.longValue() == 0L) {

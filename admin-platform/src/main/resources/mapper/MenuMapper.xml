@@ -29,5 +29,139 @@
 		where tuser.ID = #{userId,jdbcType=INTEGER} and tuser.IS_DELETE = '0'
 		order by tmenu.SEQ asc
 	</select>
+	
+	<select id="getMenus" parameterType="com.lucky.admin.platform.vo.Menu" resultMap="BaseResultMap">
+		select
+		ID, ROOT, SEQ, NAME, ICON, TITLE, ADDRESS, IS_DELETE
+		from
+		tmenu
+		<where>
+			<if test="isDelete != null and isDelete != ''">
+				and IS_DELETE = #{isDelete,jdbcType=CHAR}
+			</if>
+		</where>
+		order by ROOT asc, SEQ asc
+	</select>
+	
+	<insert id="createMenu" parameterType="com.lucky.admin.platform.vo.Menu" useGeneratedKeys="true" keyProperty="id"  keyColumn="ID">
+		insert into tmenu
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="root != null">
+				ROOT,
+			</if>
+			<if test="seq != null">
+				SEQ,
+			</if>
+			<if test="name != null">
+				NAME,
+			</if>
+			<if test="icon != null">
+				ICON,
+			</if>
+			<if test="title != null">
+				TITLE,
+			</if>
+			<if test="address != null">
+				ADDRESS,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="root != null">
+				#{root,jdbcType=INTEGER},
+			</if>
+			<if test="seq != null">
+				#{seq,jdbcType=INTEGER},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="icon != null">
+				#{icon,jdbcType=VARCHAR},
+			</if>
+			<if test="title != null">
+				#{title,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<insert id="addSuperAdminAuth" parameterType="com.lucky.admin.platform.vo.Menu">
+		insert into tauthority
+		(ROLE_ID, MENU_ID)
+		values
+		(1, #{id,jdbcType=INTEGER})
+	</insert>
+
+	<select id="chkRepeatMenu" parameterType="com.lucky.admin.platform.vo.Menu" resultMap="BaseResultMap">
+		select
+		ID, ROOT, SEQ, NAME, ICON, TITLE, ADDRESS
+		from tmenu
+		where ((ROOT = #{root,jdbcType=INTEGER} and SEQ = #{seq,jdbcType=INTEGER}) or ADDRESS = #{address,jdbcType=VARCHAR})
+		and IS_DELETE = '0'
+	</select>
+	
+	<update id="modifyMenu" parameterType="com.lucky.admin.platform.vo.Menu">
+		update tmenu
+		<set>
+			<if test="root != null">
+				ROOT = #{root,jdbcType=INTEGER},
+			</if>
+			<if test="seq != null">
+				SEQ = #{seq,jdbcType=INTEGER},
+			</if>
+			<if test="name != null">
+				NAME = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="icon != null">
+				ICON = #{icon,jdbcType=VARCHAR},
+			</if>
+			<if test="title != null">
+				TITLE = #{title,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				ADDRESS = #{address,jdbcType=VARCHAR},
+			</if>
+			<if test="isDelete != null">
+				IS_DELETE = #{isDelete,jdbcType=CHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=INTEGER}
+	</update>
+
+	<select id="chkMenu" parameterType="com.lucky.admin.platform.vo.Menu" resultMap="BaseResultMap">
+		select
+		ID, ROOT, SEQ, NAME, ICON, TITLE, ADDRESS
+		from tmenu
+		where ID != #{id,jdbcType=INTEGER} and ((ROOT = #{root,jdbcType=INTEGER} and SEQ = #{seq,jdbcType=INTEGER}) or ADDRESS = #{address,jdbcType=VARCHAR})
+		and IS_DELETE = '0'
+	</select>
+	
+	<select id="getSubMenuCnt" parameterType="com.lucky.admin.platform.vo.Menu" resultType="java.lang.Integer">
+		select count(*) from tmenu where ROOT = #{root,jdbcType=INTEGER} and IS_DELETE = '0'
+	</select>
+	
+	<update id="batchDel" parameterType="java.util.List">
+		update tmenu
+		set
+		IS_DELETE = '1'
+		where
+		ID in
+		<foreach collection="list" item="bean" index="index" open="(" close=")" separator=",">
+			#{bean.id,jdbcType=INTEGER}
+		</foreach>
+	</update>
+
+	<update id="delAuth" parameterType="java.util.List">
+		update tauthority
+		set
+		IS_DELETE = '1'
+		where
+		MENU_ID in
+		<foreach collection="list" item="bean" index="index" open="(" close=")" separator=",">
+			#{bean.id,jdbcType=INTEGER}
+		</foreach>
+	</update>
 
 </mapper>

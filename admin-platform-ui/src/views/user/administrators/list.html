@@ -14,35 +14,45 @@
   <div class="layui-card">
     <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="layadmin-useradmin-formlist">
       <div class="layui-form-item">
+        <!--<div class="layui-inline">-->
+          <!--<label class="layui-form-label">登录名</label>-->
+          <!--<div class="layui-input-block">-->
+            <!--<input type="text" name="loginname" placeholder="请输入" autocomplete="off" class="layui-input">-->
+          <!--</div>-->
+        <!--</div>-->
+        <!--<div class="layui-inline">-->
+          <!--<label class="layui-form-label">手机</label>-->
+          <!--<div class="layui-input-block">-->
+            <!--<input type="text" name="telphone" placeholder="请输入" autocomplete="off" class="layui-input">-->
+          <!--</div>-->
+        <!--</div>-->
+        <!--<div class="layui-inline">-->
+          <!--<label class="layui-form-label">邮箱</label>-->
+          <!--<div class="layui-input-block">-->
+            <!--<input type="text" name="email" placeholder="请输入" autocomplete="off" class="layui-input">-->
+          <!--</div>-->
+        <!--</div>-->
+        <!--<div class="layui-inline">-->
+          <!--<label class="layui-form-label">角色</label>-->
+          <!--<div class="layui-input-block">-->
+            <!--<select name="role">-->
+              <!--<option value="0">管理员</option>-->
+              <!--<option value="1">超级管理员</option>-->
+              <!--<option value="2">纠错员</option>-->
+              <!--<option value="3">采购员</option>-->
+              <!--<option value="4">推销员</option>-->
+              <!--<option value="5">运营人员</option>-->
+              <!--<option value="6">编辑</option>-->
+            <!--</select>-->
+          <!--</div>-->
+        <!--</div>-->
         <div class="layui-inline">
-          <label class="layui-form-label">登录名</label>
+          <label class="layui-form-label">状态</label>
           <div class="layui-input-block">
-            <input type="text" name="loginname" placeholder="请输入" autocomplete="off" class="layui-input">
-          </div>
-        </div>
-        <div class="layui-inline">
-          <label class="layui-form-label">手机</label>
-          <div class="layui-input-block">
-            <input type="text" name="telphone" placeholder="请输入" autocomplete="off" class="layui-input">
-          </div>
-        </div>
-        <div class="layui-inline">
-          <label class="layui-form-label">邮箱</label>
-          <div class="layui-input-block">
-            <input type="text" name="email" placeholder="请输入" autocomplete="off" class="layui-input">
-          </div>
-        </div>
-        <div class="layui-inline">
-          <label class="layui-form-label">角色</label>
-          <div class="layui-input-block">
-            <select name="role">
-              <option value="0">管理员</option>
-              <option value="1">超级管理员</option>
-              <option value="2">纠错员</option>
-              <option value="3">采购员</option>
-              <option value="4">推销员</option>
-              <option value="5">运营人员</option>
-              <option value="6">编辑</option>
+            <select name="isDelete" id="isDelete">
+              <option value="">全部</option>
+              <option value="0" selected>正常</option>
+              <option value="1">已删除</option>
             </select>
           </div>
         </div>
@@ -55,9 +65,13 @@
     </div>
     
     <div class="layui-card-body">
-      <div style="padding-bottom: 10px;">
-        <button class="layui-btn layuiadmin-btn-admin" data-type="batchdel">删除</button>
-        <button class="layui-btn layuiadmin-btn-admin" data-type="add">添加</button>
+      <div style="padding-top: 10px;padding-bottom: 10px;">
+        <button class="layui-btn layui-btn-danger layuiadmin-btn-admin" data-type="batchdel">删除</button>
+        <button class="layui-btn layui-btn-normal layuiadmin-btn-admin" data-type="add">添加根目录</button>
+        <div class="layui-inline" style="padding-left: 2420px;">
+          <button class="layui-btn layui-btn-normal" id="btnExpandAll"><i class="layui-icon layui-icon-triangle-d"></i>展开</button>
+          <button class="layui-btn layui-btn-normal" id="btnFoldAll"><i class="layui-icon layui-icon-triangle-r"></i>折叠</button>
+        </div>
       </div>
       
       <table id="LAY-user-back-manage" lay-filter="LAY-user-back-manage"></table>  
@@ -68,72 +82,351 @@
           <button class="layui-btn layui-btn-primary layui-btn-xs">未审核</button>
         {{#  } }}
       </script>
-      <script type="text/html" id="table-useradmin-admin">
-        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
-        {{#  if(d.role == '超级管理员'){ }}
-          <a class="layui-btn layui-btn-disabled layui-btn-xs"><i class="layui-icon layui-icon-delete"></i>删除</a>
+      <script type="text/html" id="isDeleteTmp">
+        {{#  if (d.isDelete == '0') { }}
+        <button class="layui-btn layui-btn-xs">正常</button>
+        {{#  } else if (d.isDelete == '1') { }}
+        <button class="layui-btn layui-btn-primary layui-btn-xs">已删除</button>
         {{#  } else { }}
-          <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
         {{#  } }}
+      </script>
+      <script type="text/html" id="table-useradmin-admin">
+        <div style="width: 217px;text-align: right;">
+          {{#  if (d.isDelete == '0') { }}
+          {{#  if(d.address == null || d.address == ''){ }}
+            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="add"><i class="layui-icon layui-icon-add-1"></i>添加子目录</a>
+          {{#  } }}
+          <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+          <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
+          {{#  } }}
+        </div>
       </script>
     </div>
   </div>
 </div>
 
 <script>
-layui.use('useradmin', layui.factory('useradmin')).use(['admin', 'useradmin', 'table'], function(){
+layui.use('useradmin', layui.factory('useradmin')).use(['admin', 'useradmin', 'treeTable'], function(){
   var $ = layui.$
   ,admin = layui.admin
   ,view = layui.view
-  ,table = layui.table
+  ,treeTable = layui.treeTable
   ,form = layui.form;
   
   form.render(null, 'layadmin-useradmin-formlist');
   
+  var objTb = {};
+
+  // 渲染表格
+  var insTb = function() {
+    objTb = treeTable.render({
+      elem: '#LAY-user-back-manage',
+      tree: {
+        idName: 'id',
+        pidName: 'root',
+        isPidData: true,
+        iconIndex: 4
+      },
+      cols: [
+        {
+          type: "checkbox"
+        },
+        {
+          field: 'id',
+          title: 'ID',
+          width: 120,
+          align: "right"
+        },
+        {
+          field: 'name',
+          title: '名称',
+          width: 300
+        },
+        {
+          field: 'icon',
+          title: '图标',
+          width: 150,
+          align: "middle"
+        },
+        {
+          field: 'title',
+          title: '菜单',
+          width: 600
+        },
+        {
+          field: 'seq',
+          title: '顺序',
+          width: 100,
+          align: "middle"
+        },
+        {
+          field: 'address',
+          title: '地址'
+        },
+        {
+          field: "isDelete",
+          title: "状态",
+          templet: "#isDeleteTmp",
+          width: 200,
+          align: "center"
+        },
+        {
+          title: "操作",
+          width: 400,
+          align: "center",
+          fixed: "right",
+          toolbar: "#table-useradmin-admin"
+        }
+      ],
+      reqData: function (data, callback) {
+        var url = "/lucky/menu/getMenus?isDelete="+$("#isDelete").val()+"&access_token=" + layui.data(layui.setter.tableName)[layui.setter.request.tokenName];
+        $.get(url, function (res) {
+          callback(res.data);
+//        for (var i = 0; i < res.data.length; i++) {
+//          if (res.data[i].auth == 1 && res.data[i].address != null) {
+//            insTb.setChecked([res.data[i].menuId]);
+//          }
+//        }
+          objTb.expandAll();
+        });
+      },
+      height: "full-350",
+      text: { none: '<br/>数据不存在！' }
+    }),
+    treeTable.on("tool(LAY-user-back-manage)",
+      function(e) {
+        var l = e.data;
+        "del" === e.event ? layer.confirm("确定删除吗？",
+          function(i) {
+            layer.close(i);
+
+            var menus = [];
+            var tmenu = {
+              id: l.id
+            }
+            menus.push(tmenu);
+
+            layui.admin.req({
+              url: '/lucky/menu/batchDel?access_token=' + layui.data(layui.setter.tableName)[layui.setter.request.tokenName]
+              ,type: 'POST'
+              ,contentType: 'application/json; charset=utf-8'
+              ,data: JSON.stringify({
+                data: menus
+              })
+              ,success: function(res) {
+                if (res.code === layui.setter.response.statusCode.ok) {
+                  //修改成功的提示与跳转
+                  layer.msg(res.msg, {
+                    offset: '15px'
+                    , icon: 1
+                    , time: 1000
+                  }, function () {
+                    insTb();
+                  });
+                } else if (res.code !== layui.setter.response.statusCode.logout) {
+                  layer.msg(res.msg, {
+                    icon: 5
+                    ,time: 3000
+                  });
+                }
+              }
+              ,error: function(res) {
+                layer.msg(res, {
+                  icon: 5
+                  ,time: 1000
+                });
+              }
+            });
+        }) : ("edit" === e.event ? admin.popup({
+          title: "编辑菜单",
+          area: ["500px", "450px"],
+          id: "LAY-popup-useradmin-edit",
+          success: function(e, i) {
+            view(this.id).render("user/administrators/adminform", l).done(function() {
+              form.render(null, "layuiadmin-form-admin"),
+              form.on("submit(LAY-user-back-submit)",
+                function(e) {
+                  var field = e.field;
+                  field.id = l.id;
+                  field.root = l.root;
+
+                  //提交 Ajax 成功后，关闭当前弹层并重载表格
+                  layui.admin.req({
+                    url: '/lucky/menu/modify?access_token=' + layui.data(layui.setter.tableName)[layui.setter.request.tokenName]
+                    ,type: 'POST'
+                    ,contentType: 'application/json; charset=utf-8'
+                    ,data: JSON.stringify({
+                      data: field
+                    })
+                    ,success: function(res) {
+                      if (res.code === layui.setter.response.statusCode.ok) {
+                        layer.close(i); //执行关闭
+                        //修改成功的提示与跳转
+                        layer.msg(res.msg, {
+                          offset: '15px'
+                          , icon: 1
+                          , time: 1000
+                        }, function () {
+                          insTb(); //重载表格
+                        });
+                      } else if (res.code !== layui.setter.response.statusCode.logout) {
+                        layer.msg(res.msg, {
+                          icon: 5
+                          ,time: 3000
+                        });
+                      } else if (res.code === layui.setter.response.statusCode.logout) {
+                        layer.close(i); //执行关闭
+                      }
+                    }
+                    ,error: function(res) {
+                      layer.msg(res, {
+                        icon: 5
+                        ,time: 1000
+                      });
+                    }
+                  });
+                })
+            })
+          }
+        }) : "add" === e.event && admin.popup({
+          title: '添加子目录菜单'
+          ,area: ['500px', '450px']
+          ,id: 'LAY-popup-useradmin-addsub'
+          ,success: function(layero, index){
+            view(this.id).render('user/administrators/adminform').done(function(){
+              form.render(null, 'layuiadmin-form-admin');
+
+              //监听提交
+              form.on('submit(LAY-user-back-submit)', function(data){
+                var field = data.field; //获取提交的字段
+                field.root = l.id;
+
+                //提交 Ajax 成功后，关闭当前弹层并重载表格
+                layui.admin.req({
+                  url: '/lucky/menu/create?access_token=' + layui.data(layui.setter.tableName)[layui.setter.request.tokenName]
+                  ,type: 'POST'
+                  ,contentType: 'application/json; charset=utf-8'
+                  ,data: JSON.stringify({
+                    data: field
+                  })
+                  ,success: function(res) {
+                    if (res.code === layui.setter.response.statusCode.ok) {
+                      layer.close(index); //执行关闭
+                      //修改成功的提示与跳转
+                      layer.msg(res.msg, {
+                        offset: '15px'
+                        , icon: 1
+                        , time: 1000
+                      }, function () {
+                        insTb(); //重载表格
+                      });
+                    } else if (res.code !== layui.setter.response.statusCode.logout) {
+                      layer.msg(res.msg, {
+                        icon: 5
+                        ,time: 3000
+                      });
+                    } else if (res.code === layui.setter.response.statusCode.logout) {
+                      layer.close(index); //执行关闭
+                    }
+                  }
+                  ,error: function(res) {
+                    layer.msg(res, {
+                      icon: 5
+                      ,time: 1000
+                    });
+                  }
+                });
+              });
+            });
+          }
+        }))
+      });
+  };
+
+  //加载表格
+  insTb();
+
   //监听搜索
   form.on('submit(LAY-user-back-search)', function(data){
-    var field = data.field;
-    
+
     //执行重载
-    table.reload('LAY-user-back-manage', {
-      where: field
-    });
+    insTb();
   });
 
   //事件
   var active = {
     batchdel: function(){
-      var checkStatus = table.checkStatus('LAY-user-back-manage')
-      ,checkData = checkStatus.data; //得到选中的数据
+      var checkStatus = objTb.checkStatus(); //得到选中的数据
 
-      if(checkData.length === 0){
-        return layer.msg('请选择数据');
-      }
-      
-      layer.prompt({
-        formType: 1
-        ,title: '敏感操作，请验证口令'
-      }, function(value, index){
-        layer.close(index);
-        
-        layer.confirm('确定删除吗？', function(index) {
-          
-          //执行 Ajax 后重载
-          /*
-          admin.req({
-            url: 'xxx'
-            //,……
-          });
-          */
-          table.reload('LAY-user-back-manage');
-          layer.msg('已删除');
+      if(checkStatus.length === 0){
+        return layer.msg('请选择菜单', {
+          icon: 5
+          ,time: 1000
         });
-      }); 
+      }
+
+      var menus = [];
+      for (var i = 0; i < checkStatus.length; i++) {
+        if (checkStatus[i].isDelete == "1") {
+          return layer.msg('请选择正常菜单', {
+            icon: 5
+            ,time: 2000
+          });
+        }
+        var tmenu = {
+          id: checkStatus[i].id
+        }
+        if (!checkStatus[i].children || checkStatus[i].children.length == 0) {
+          menus.push(tmenu);
+        }
+      }
+        
+      layer.confirm('确定删除吗？', function(index) {
+        layer.close(index);
+        //执行 Ajax 后重载
+        /*
+        admin.req({
+          url: 'xxx'
+          //,……
+        });
+        */
+        layui.admin.req({
+          url: '/lucky/menu/batchDel?access_token=' + layui.data(layui.setter.tableName)[layui.setter.request.tokenName]
+          ,type: 'POST'
+          ,contentType: 'application/json; charset=utf-8'
+          ,data: JSON.stringify({
+            data: menus
+          })
+          ,success: function(res) {
+            if (res.code === layui.setter.response.statusCode.ok) {
+              //修改成功的提示与跳转
+              layer.msg(res.msg, {
+                offset: '15px'
+                , icon: 1
+                , time: 1000
+              }, function () {
+                insTb();
+              });
+            } else if (res.code !== layui.setter.response.statusCode.logout) {
+              layer.msg(res.msg, {
+                icon: 5
+                ,time: 3000
+              });
+            }
+          }
+          ,error: function(res) {
+            layer.msg(res, {
+              icon: 5
+              ,time: 1000
+            });
+          }
+        });
+      });
     }
     ,add: function(){
       admin.popup({
-        title: '添加管理员'
-        ,area: ['420px', '450px']
+        title: '添加根目录菜单'
+        ,area: ['500px', '450px']
         ,id: 'LAY-popup-useradmin-add'
         ,success: function(layero, index){
           view(this.id).render('user/administrators/adminform').done(function(){
@@ -142,11 +435,43 @@ layui.use('useradmin', layui.factory('useradmin')).use(['admin', 'useradmin', 't
             //监听提交
             form.on('submit(LAY-user-back-submit)', function(data){
               var field = data.field; //获取提交的字段
+              field.root = 0;
 
               //提交 Ajax 成功后，关闭当前弹层并重载表格
-              //$.ajax({});
-              layui.table.reload('LAY-user-back-manage'); //重载表格
-              layer.close(index); //执行关闭 
+              layui.admin.req({
+                url: '/lucky/menu/create?access_token=' + layui.data(layui.setter.tableName)[layui.setter.request.tokenName]
+                ,type: 'POST'
+                ,contentType: 'application/json; charset=utf-8'
+                ,data: JSON.stringify({
+                  data: field
+                })
+                ,success: function(res) {
+                  if (res.code === layui.setter.response.statusCode.ok) {
+                    layer.close(index); //执行关闭
+                    //修改成功的提示与跳转
+                    layer.msg(res.msg, {
+                      offset: '15px'
+                      , icon: 1
+                      , time: 1000
+                    }, function () {
+                      insTb(); //重载表格
+                    });
+                  } else if (res.code !== layui.setter.response.statusCode.logout) {
+                    layer.msg(res.msg, {
+                      icon: 5
+                      ,time: 3000
+                    });
+                  } else if (res.code === layui.setter.response.statusCode.logout) {
+                    layer.close(index); //执行关闭
+                  }
+                }
+                ,error: function(res) {
+                  layer.msg(res, {
+                    icon: 5
+                    ,time: 1000
+                  });
+                }
+              });
             });
           });
         }
@@ -156,6 +481,16 @@ layui.use('useradmin', layui.factory('useradmin')).use(['admin', 'useradmin', 't
   $('.layui-btn.layuiadmin-btn-admin').on('click', function(){
     var type = $(this).data('type');
     active[type] ? active[type].call(this) : '';
+  });
+
+  // 全部展开
+  $('#btnExpandAll').click(function () {
+    objTb.expandAll();
+  });
+
+  // 全部折叠
+  $('#btnFoldAll').click(function () {
+    objTb.foldAll();
   });
 });
 </script>
