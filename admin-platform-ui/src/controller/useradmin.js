@@ -73,7 +73,7 @@ function(e) {
         }]],
         page: !0,
         limit: 50,
-        height: "full-275",
+        height: "full-280",
         text: { none: '数据不存在！' }
     }),
     l.on("tool(LAY-user-manage)",
@@ -310,7 +310,7 @@ function(e) {
         }]],
         page: !0,
         limit: 50,
-        height: "full-275",
+        height: "full-280",
         text: { none: '数据不存在！' }
     }),
     l.on("tool(LAY-user-back-role)",
