@@ -168,7 +168,7 @@
 	<update id="modifyUser" parameterType="com.lucky.admin.platform.vo.User">
 		update tuser
 		<set>
-			<if test="roleId != null">
+			<if test="roleId != null and roleId != 0">
 				ROLE_ID = #{roleId,jdbcType=INTEGER},
 			</if>
 			<if test="username != null">

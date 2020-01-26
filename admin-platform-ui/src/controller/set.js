@@ -40,6 +40,7 @@ function(t) {
                   id: layui.data(layui.setter.tableName)['id'],
                   username: layui.data(layui.setter.tableName)['username'],
                   nickname: t.field.nickname,
+                  avatar: i('#ava').attr('src'),
                   sex: i('input[name="sex"]:checked').val(),
                   mobile: t.field.cellphone,
                   email: t.field.email,
@@ -55,6 +56,7 @@ function(t) {
                 , time: 1000
               }, function () {
                 location.hash = '/';
+                location.reload();
               });
             } else if (res.code !== layui.setter.response.statusCode.logout) {
               layer.msg(res.msg, {

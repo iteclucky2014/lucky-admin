@@ -61,7 +61,7 @@
         lay-done="layui.element.render('nav', 'layadmin-layout-right');">
           <a href="javascript:;">
             {{# if(d.data.avatar){ }}
-            <img src="{{ layui.setter.base }}style/res/{{ d.data.avatar }}" class="layui-nav-img">
+            <img src="{{ d.data.avatar }}" class="layui-nav-img">
             {{# } else { }}
             <img src="{{ layui.setter.base }}style/res/default-avatar.jpg" class="layui-nav-img">
             {{# } }}

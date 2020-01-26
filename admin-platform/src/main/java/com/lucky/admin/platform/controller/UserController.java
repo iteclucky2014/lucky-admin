@@ -24,6 +24,7 @@ public class UserController {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if(principal  != null && principal instanceof UserDetails) {
 			User user = (User) principal;
+			user.setAvatar(userService.getUserByUsername(user.getUsername()).getAvatar());
 			return ApiResultBuilder.create().code(ApiResultCode.Success.code()).data(user).build();
 		} else {
 			return ApiResultBuilder.create().code(ApiResultCode.DataNotExist.code()).msg(ApiResultCode.DataNotExist.msg()).build();
