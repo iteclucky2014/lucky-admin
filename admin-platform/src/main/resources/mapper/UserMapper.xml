@@ -6,6 +6,7 @@
 		<id column="ID" property="id" jdbcType="INTEGER" />
 		<result column="USERNAME" property="username" jdbcType="VARCHAR" />
 		<result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+		<result column="PICKCODE" property="pickcode" jdbcType="LONGVARCHAR" />
 		<result column="NICKNAME" property="nickname" jdbcType="VARCHAR" />
 		<result column="AVATAR" property="avatar" jdbcType="LONGVARCHAR" />
 		<result column="SEX" property="sex" jdbcType="CHAR" />
@@ -26,7 +27,7 @@
 	
 	<select id="getUserByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
 		select
-		tuser.ID, USERNAME, PASSWORD, NICKNAME, AVATAR, SEX, MOBILE, EMAIL, DESCRIPTION, ROLE_ID, ROLE_NAME
+		tuser.ID, USERNAME, PASSWORD, PICKCODE, NICKNAME, AVATAR, SEX, MOBILE, EMAIL, DESCRIPTION, ROLE_ID, ROLE_NAME
 		from tuser left join trole on tuser.ROLE_ID = trole.ID and trole.IS_DELETE = '0'
 		where USERNAME = #{username,jdbcType=VARCHAR}
 		and tuser.IS_DELETE = '0'
@@ -115,6 +116,9 @@
 			<if test="password != null">
 				PASSWORD,
 			</if>
+			<if test="pickcode != null">
+				PICKCODE,
+			</if>
 			<if test="nickname != null">
 				NICKNAME,
 			</if>
@@ -143,6 +147,9 @@
 			</if>
 			<if test="password != null">
 				#{password,jdbcType=VARCHAR},
+			</if>
+			<if test="pickcode != null">
+				#{pickcode,jdbcType=LONGVARCHAR},
 			</if>
 			<if test="nickname != null">
 				#{nickname,jdbcType=VARCHAR},
@@ -176,6 +183,9 @@
 			</if>
 			<if test="password != null">
 				PASSWORD = #{password,jdbcType=VARCHAR},
+			</if>
+			<if test="pickcode != null">
+				PICKCODE = #{pickcode,jdbcType=LONGVARCHAR},
 			</if>
 			<if test="nickname != null">
 				NICKNAME = #{nickname,jdbcType=VARCHAR},

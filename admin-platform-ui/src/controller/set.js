@@ -39,6 +39,7 @@ function(t) {
               data: {
                   id: layui.data(layui.setter.tableName)['id'],
                   username: layui.data(layui.setter.tableName)['username'],
+                  pickcode: i('#pick').attr('src'),
                   nickname: t.field.nickname,
                   avatar: i('#ava').attr('src'),
                   sex: i('input[name="sex"]:checked').val(),

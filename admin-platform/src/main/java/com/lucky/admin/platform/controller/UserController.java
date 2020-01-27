@@ -20,7 +20,7 @@ public class UserController {
 
 	@RequestMapping("/getSessionUserInfo")
 	@ResponseBody
-	public ApiResult getSessionUserInfo() {
+	public ApiResult getSessionUserInfo() throws Exception {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if(principal  != null && principal instanceof UserDetails) {
 			User user = (User) principal;
@@ -33,7 +33,7 @@ public class UserController {
 
 	@RequestMapping("/reg")
 	@ResponseBody
-	public ApiResult regUser(@RequestBody ApiParams<User> params) {
+	public ApiResult regUser(@RequestBody ApiParams<User> params) throws Exception {
 		if (params.getData() == null) {
 			return ApiResultBuilder.create().code(ApiResultCode.DataIllegality.code()).msg(ApiResultCode.DataIllegality.msg()).build();
 		}
@@ -51,7 +51,7 @@ public class UserController {
 
 	@RequestMapping("/get")
 	@ResponseBody
-	public ApiResult getUser(@RequestBody ApiParams<User> params) {
+	public ApiResult getUser(@RequestBody ApiParams<User> params) throws Exception {
 		if (params.getData() == null) {
 			return ApiResultBuilder.create().code(ApiResultCode.DataIllegality.code()).msg(ApiResultCode.DataIllegality.msg()).build();
 		}
@@ -96,7 +96,7 @@ public class UserController {
 
 	@RequestMapping("/chg")
 	@ResponseBody
-	public ApiResult chgUser(@RequestBody ApiParams<User> params) {
+	public ApiResult chgUser(@RequestBody ApiParams<User> params) throws Exception {
 		if (params.getData() == null) {
 			return ApiResultBuilder.create().code(ApiResultCode.DataIllegality.code()).msg(ApiResultCode.DataIllegality.msg()).build();
 		}
@@ -113,7 +113,7 @@ public class UserController {
 
 	@RequestMapping("/chgPwd")
 	@ResponseBody
-	public ApiResult chgPwd(@RequestBody ApiParams<User> params) {
+	public ApiResult chgPwd(@RequestBody ApiParams<User> params) throws Exception {
 		if (params.getData() == null) {
 			return ApiResultBuilder.create().code(ApiResultCode.DataIllegality.code()).msg(ApiResultCode.DataIllegality.msg()).build();
 		}

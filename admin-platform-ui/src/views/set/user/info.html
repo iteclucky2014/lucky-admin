@@ -39,6 +39,12 @@
               <!--<div class="layui-form-mid layui-word-aux">当前角色不可更改为其它角色</div>-->
             </div>
             <div class="layui-form-item">
+              <label class="layui-form-label">二维码</label>
+              <div class="layui-input-inline">
+                <img id="pick" style="width: 190px;height: 190px;">
+              </div>
+            </div>
+            <div class="layui-form-item">
               <label class="layui-form-label">昵称</label>
               <div class="layui-input-inline">
                 <input type="text" name="nickname" lay-verify="nickname" autocomplete="off" placeholder="请输入昵称" class="layui-input">
@@ -126,6 +132,7 @@ layui.use('set', layui.factory('set')).use(['set', 'upload'], function() {
         var user = res.data || {};
         $('input[name="rolename"]').val(user.roleName || '');
         $('input[name="username"]').val(user.username || '');
+        $('#pick').attr('src', user.pickcode);
         $('input[name="nickname"]').val(user.nickname || '');
         if (user.avatar) {
           $('#ava').attr('src', user.avatar);

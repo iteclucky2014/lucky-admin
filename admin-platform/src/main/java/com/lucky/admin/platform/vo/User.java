@@ -16,6 +16,8 @@ public class User extends BaseEntity implements UserDetails {
 	private String username;
 
 	private String password;
+	
+	private String pickcode;
 
 	private String nickname;
 
@@ -71,6 +73,14 @@ public class User extends BaseEntity implements UserDetails {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getPickcode() {
+		return pickcode;
+	}
+
+	public void setPickcode(String pickcode) {
+		this.pickcode = pickcode;
 	}
 
 	public String getNickname() {
