@@ -91,7 +91,7 @@
 		insert into tauthority
 		(ROLE_ID, MENU_ID)
 		values
-		(1, #{id,jdbcType=INTEGER})
+		(0, #{id,jdbcType=INTEGER})
 	</insert>
 
 	<select id="chkRepeatMenu" parameterType="com.lucky.admin.platform.vo.Menu" resultMap="BaseResultMap">

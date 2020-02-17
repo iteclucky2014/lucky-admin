@@ -38,7 +38,7 @@
 		tuser.ID, USERNAME, PASSWORD, NICKNAME, AVATAR, SEX, MOBILE, EMAIL, DESCRIPTION, ROLE_ID, ROLE_NAME, date_format(tuser.CREATE_TIME, '%Y-%m-%d') as CREATE_TIME, tuser.IS_DELETE
 		from tuser left join trole on tuser.ROLE_ID = trole.ID and trole.IS_DELETE = '0'
 		<where>
-			tuser.ID > 1
+			tuser.ROLE_ID > 0
 			<if test="username != null and username != ''">
 				and USERNAME = #{username,jdbcType=VARCHAR}
 			</if>
@@ -64,7 +64,7 @@
 				and tuser.IS_DELETE = #{isDelete,jdbcType=CHAR}
 			</if>
 		</where>
-		order by tuser.CREATE_TIME desc
+		order by tuser.ID asc
 		limit #{offset}, #{limit}
 	</select>
 
@@ -75,7 +75,7 @@
 		tuser.ID, USERNAME, PASSWORD, NICKNAME, AVATAR, SEX, MOBILE, EMAIL, DESCRIPTION, ROLE_ID, ROLE_NAME, date_format(tuser.CREATE_TIME, '%Y-%m-%d') as CREATE_TIME, tuser.IS_DELETE
 		from tuser left join trole on tuser.ROLE_ID = trole.ID and trole.IS_DELETE = '0'
 		<where>
-			tuser.ID > 1
+			tuser.ROLE_ID > 0
 			<if test="username != null and username != ''">
 				and USERNAME = #{username,jdbcType=VARCHAR}
 			</if>
@@ -226,7 +226,7 @@
 	<select id="getRoles" parameterType="com.lucky.admin.platform.vo.User" resultMap="BaseResultMap">
 		select
 		ID, ROLE_NAME, ROLE_DESC
-		from trole where ID > 1 and IS_DELETE = '0'
+		from trole where ID > 0 and IS_DELETE = '0'
 		order by ID asc
 		limit #{offset}, #{limit}
 	</select>
@@ -236,7 +236,7 @@
 		(
 		select
 		ID, ROLE_NAME, ROLE_DESC
-		from trole where ID > 1 and IS_DELETE = '0'
+		from trole where ID > 0 and IS_DELETE = '0'
 		) ROLES
 	</select>
 
