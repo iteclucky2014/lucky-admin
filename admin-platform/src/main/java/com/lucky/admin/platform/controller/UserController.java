@@ -84,6 +84,7 @@ public class UserController {
         user.setCreateTimeFrom(createTimeFrom);
         user.setCreateTimeTo(createTimeTo);
         user.setIsDelete(isDelete);
+		user.setRoleId(((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getRoleId());
 		Long count = userService.getUserCountByCondition(user);
 //		if (count == null || count.longValue() == 0L) {
 //			return ApiResultBuilder.create().code(ApiResultCode.BusinessException.code()).msg("数据不存在！").build();

@@ -38,7 +38,9 @@
 		tuser.ID, USERNAME, PASSWORD, NICKNAME, AVATAR, SEX, MOBILE, EMAIL, DESCRIPTION, ROLE_ID, ROLE_NAME, date_format(tuser.CREATE_TIME, '%Y-%m-%d') as CREATE_TIME, tuser.IS_DELETE
 		from tuser left join trole on tuser.ROLE_ID = trole.ID and trole.IS_DELETE = '0'
 		<where>
-			tuser.ROLE_ID > 0
+			<if test="roleId > 0">
+				tuser.ROLE_ID > 0
+			</if>
 			<if test="username != null and username != ''">
 				and USERNAME = #{username,jdbcType=VARCHAR}
 			</if>
@@ -75,7 +77,9 @@
 		tuser.ID, USERNAME, PASSWORD, NICKNAME, AVATAR, SEX, MOBILE, EMAIL, DESCRIPTION, ROLE_ID, ROLE_NAME, date_format(tuser.CREATE_TIME, '%Y-%m-%d') as CREATE_TIME, tuser.IS_DELETE
 		from tuser left join trole on tuser.ROLE_ID = trole.ID and trole.IS_DELETE = '0'
 		<where>
-			tuser.ROLE_ID > 0
+			<if test="roleId > 0">
+				tuser.ROLE_ID > 0
+			</if>
 			<if test="username != null and username != ''">
 				and USERNAME = #{username,jdbcType=VARCHAR}
 			</if>

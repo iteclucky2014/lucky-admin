@@ -106,7 +106,7 @@
         <img style="display: inline-block; width: 50%; height: 100%;" src= {{ d.avatar }}>
       </script> 
       <script type="text/html" id="table-useradmin-webuser">
-        {{#  if (d.isDelete == '0') { }}
+        {{#  if (d.isDelete == '0' && d.roleId > 0) { }}
         <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>分配角色</a>
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
         {{#  } }}
@@ -151,6 +151,12 @@ layui.use('useradmin', layui.factory('useradmin')).use(['admin', 'useradmin', 't
       
       var users = [];
       for (var i = 0; i < checkData.length; i++) {
+        if (checkData[i].roleId == 0) {
+          return layer.msg('超级管理员不允许删除', {
+            icon: 5
+            ,time: 2000
+          });
+        }
         if (checkData[i].isDelete == "1") {
           return layer.msg('请选择正常用户', {
             icon: 5
