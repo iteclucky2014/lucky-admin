@@ -22,7 +22,7 @@ public class UserService {
 
 	public User getUserByUsername(String username) throws Exception {
 		User user = userMapper.getUserByUsername(username);
-		if (user.getPickcode() == null || "".equals(user.getPickcode())) {
+		if (user != null && (user.getPickcode() == null || "".equals(user.getPickcode()))) {
 			//生成二维码
 			BufferedImage image = QRCodeUtil.encode(user.getUsername(), null, false);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();//io流
