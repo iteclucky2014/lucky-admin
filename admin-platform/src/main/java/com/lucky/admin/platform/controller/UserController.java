@@ -38,7 +38,7 @@ public class UserController {
 			return ApiResultBuilder.create().code(ApiResultCode.DataIllegality.code()).msg(ApiResultCode.DataIllegality.msg()).build();
 		}
 		User user = params.getData();
-		user.setRoleId(4);
+		user.setRoleId(3);
 		if (userService.getUserByUsername(user.getUsername()) != null) {
 			return ApiResultBuilder.create().code(ApiResultCode.BusinessException.code()).msg("该用户已存在！").build();
 		}
