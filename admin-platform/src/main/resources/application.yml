@@ -1,9 +1,9 @@
 server:
-  port: 8090
+  port: ${random.int[8090,8091]}
   servlet:
     context-path: /lucky
     session:
-      timeout: 1800
+      timeout: 1800s
 
 multipart:
   maxFileSize: 10Mb
