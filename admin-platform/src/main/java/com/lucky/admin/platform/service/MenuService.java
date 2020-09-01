@@ -17,13 +17,13 @@ public class MenuService {
 	public List<Menu> getAuthMenu(Menu param) {
 		List<Menu> menus = menuMapper.getAuthMenu(param);
 		for (Menu menu : menus) {
-			if (menu.getAddress() != null) {
+			if (menu.getAddress() != null && !"".equals(menu.getAddress())) {
 				continue;
 			}
 			menu.setRoot(menu.getId());
 			List<Menu> menus2 = menuMapper.getAuthMenu(menu);
 			for (Menu menu2 : menus2) {
-				if (menu2.getAddress() != null) {
+				if (menu2.getAddress() != null && !"".equals(menu2.getAddress())) {
 					continue;
 				}
 				menu2.setRoot(menu2.getId());
