@@ -98,7 +98,7 @@
 		select
 		ID, ROOT, SEQ, NAME, ICON, TITLE, ADDRESS
 		from tmenu
-		where ((ROOT = #{root,jdbcType=INTEGER} and SEQ = #{seq,jdbcType=INTEGER}) or ADDRESS = #{address,jdbcType=VARCHAR})
+		where ((ROOT = #{root,jdbcType=INTEGER} and SEQ = #{seq,jdbcType=INTEGER}) or (ADDRESS is not null and ADDRESS != '' and ADDRESS = #{address,jdbcType=VARCHAR}))
 		and IS_DELETE = '0'
 	</select>
 	
