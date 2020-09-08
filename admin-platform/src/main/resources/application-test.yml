@@ -1,0 +1,6 @@
+server:
+  port: ${random.int[9090,9091]}
+  servlet:
+    context-path: /lucky
+    session:
+      timeout: 1800s
