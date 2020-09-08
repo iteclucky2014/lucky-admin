@@ -15,7 +15,7 @@ public class RestControllerExceptionHandleAdvice {
 
     private final static Logger logger = LoggerFactory.getLogger(RestControllerExceptionHandleAdvice.class);
 
-    @ExceptionHandler
+    @ExceptionHandler(value = java.lang.Exception.class)
     public ApiResult handler(HttpServletRequest req, HttpServletResponse res, Exception e) {
 
         logger.info("Restful Http请求发生异常...");
