@@ -61,7 +61,9 @@ function(e) {
                 else if (t[o.statusName] == n.logout) i.exit();
                 else if (t[o.statusName] != n.be) {
                     var r = ["<cite>Error：</cite> " + (t[o.msgName] || "返回状态码异常"), s()].join("");
-                    i.error(r)
+                    layer.close(layer.index);
+                    location.hash = "/template/tips/error";
+                    // i.error(r)
                 }
                 "function" == typeof a && a(t)
             },
